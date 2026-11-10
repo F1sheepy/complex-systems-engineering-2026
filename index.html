@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>轮腿式无人作战平台 · 任务—体系—整机—系统—子系统—模块</title>
+<style>
+:root{
+  --bg:#05080c;
+  --surface:#0a1018;
+  --surface-2:#0d1520;
+  --line:rgba(140,180,210,.13);
+  --line-strong:rgba(140,180,210,.28);
+  --txt:#dbe6f0;
+  --dim:#7b8ea3;
+  --faint:#4d5d6d;
+  --cyan:#22d3ee;
+  --mint:#4ade80;
+  --amber:#fbbf24;
+  --orange:#fb923c;
+  --violet:#a78bfa;
+  --steel:#94a3b8;
+  --c-task:#fb923c;
+  --c-sos:#fbbf24;
+  --c-whole:#22d3ee;
+  --c-system:#60a5fa;
+  --c-sub:#a78bfa;
+  --c-module:#94a3b8;
+  --mono:ui-monospace,"Cascadia Mono",Consolas,"Courier New",monospace;
+  --sans:"Microsoft YaHei UI","Microsoft YaHei","PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{
+  background:var(--bg);color:var(--txt);font-family:var(--sans);
+  font-size:15px;line-height:1.75;-webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+/* ---------- 背景 ---------- */
+.bg-grid{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(120,170,200,.045) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(120,170,200,.045) 1px,transparent 1px);
+  background-size:56px 56px;
+  mask-image:radial-gradient(ellipse 90% 70% at 50% 0%,#000 30%,transparent 85%);
+  -webkit-mask-image:radial-gradient(ellipse 90% 70% at 50% 0%,#000 30%,transparent 85%);
+}
+.bg-glow{
+  position:fixed;top:-360px;left:50%;transform:translateX(-50%);
+  width:1100px;height:720px;z-index:0;pointer-events:none;
+  background:radial-gradient(circle,rgba(34,211,238,.10) 0%,rgba(34,211,238,.03) 40%,transparent 70%);
+  filter:blur(20px);
+}
+main{position:relative;z-index:1}
+
+/* ---------- 顶栏 ---------- */
+.topbar{
+  position:sticky;top:0;z-index:50;
+  display:flex;align-items:center;justify-content:space-between;gap:20px;
+  padding:14px clamp(20px,5vw,64px);
+  background:rgba(5,8,12,.78);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.brand-mark{
+  width:10px;height:10px;flex:0 0 auto;
+  background:var(--cyan);border-radius:2px;
+  box-shadow:0 0 12px rgba(34,211,238,.8);
+  animation:pulse 2.6s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.brand-text{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--faint);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand-text b{color:var(--txt);font-weight:600;letter-spacing:.06em}
+.topnav{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
+.topnav a{
+  color:var(--dim);text-decoration:none;font-size:13px;
+  padding:6px 12px;border-radius:6px;transition:.2s;
+}
+.topnav a:hover{color:var(--cyan);background:rgba(34,211,238,.07)}
+
+/* ---------- Hero ---------- */
+.hero{padding:clamp(56px,9vw,110px) clamp(20px,5vw,64px) clamp(36px,5vw,60px);max-width:1320px;margin:0 auto}
+.kicker{
+  font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--cyan);
+  display:flex;align-items:center;gap:12px;margin-bottom:26px;
+}
+.kicker::before{content:"";width:38px;height:1px;background:var(--cyan);opacity:.7}
+.hero h1{
+  font-size:clamp(34px,6.2vw,76px);line-height:1.08;font-weight:800;letter-spacing:-.01em;
+  margin-bottom:22px;
+}
+.hero h1 em{
+  font-style:normal;color:transparent;
+  background:linear-gradient(100deg,var(--cyan) 0%,#7dd3fc 45%,var(--mint) 100%);
+  -webkit-background-clip:text;background-clip:text;
+}
+.hero-sub{max-width:760px;color:var(--dim);font-size:clamp(14px,1.6vw,17px);line-height:1.9}
+.hero-sub strong{color:var(--txt);font-weight:600}
+
+/* 六层链路 */
+.chainbar{
+  display:flex;align-items:stretch;gap:0;margin-top:44px;flex-wrap:wrap;
+  border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface);
+}
+.cb-node{
+  flex:1 1 120px;padding:16px 14px;position:relative;min-width:104px;
+  border-right:1px solid var(--line);transition:.25s;
+}
+.cb-node:last-child{border-right:none}
+.cb-node .cb-cn{font-size:15px;font-weight:700;color:var(--c);letter-spacing:.04em}
+.cb-node .cb-en{font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--faint);margin-top:3px}
+.cb-node:hover{background:rgba(255,255,255,.025)}
+.cb-node.pivot{background:linear-gradient(180deg,rgba(34,211,238,.14),rgba(34,211,238,.03))}
+.cb-node.pivot .cb-cn{font-size:17px}
+.cb-node.pivot::before{
+  content:"轴心";position:absolute;top:6px;right:8px;
+  font-family:var(--mono);font-size:8px;letter-spacing:.1em;color:var(--cyan);
+  border:1px solid rgba(34,211,238,.35);border-radius:3px;padding:0 4px;
+}
+
+/* 指标 */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:28px}
+.stat{
+  border:1px solid var(--line);border-radius:10px;padding:16px 16px 14px;
+  background:var(--surface);transition:.25s;
+}
+.stat:hover{border-color:var(--line-strong);transform:translateY(-2px)}
+.stat .v{font-family:var(--mono);font-size:clamp(22px,2.6vw,30px);font-weight:700;color:var(--txt);line-height:1.1}
+.stat .v small{font-size:.5em;color:var(--cyan);margin-left:3px;font-weight:500}
+.stat .l{font-size:12px;color:var(--dim);margin-top:6px}
+
+/* ---------- 通用区块 ---------- */
+.sec{padding:clamp(48px,7vw,88px) clamp(20px,5vw,64px);max-width:1320px;margin:0 auto}
+.sec-head{margin-bottom:38px;max-width:900px}
+.sec-no{
+  font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--faint);
+  display:block;margin-bottom:10px;
+}
+.sec-head h2{font-size:clamp(23px,3.2vw,34px);font-weight:750;letter-spacing:-.01em;margin-bottom:12px}
+.sec-head p{color:var(--dim);font-size:14.5px;line-height:1.9}
+.sec-head p b{color:var(--txt);font-weight:600}
+
+/* 双向逻辑条 */
+.bidir{
+  display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:34px;
+}
+.bidir-row{
+  display:flex;align-items:center;gap:14px;padding:14px 18px;
+  border:1px solid var(--line);border-radius:10px;background:var(--surface);
+  font-size:13px;color:var(--dim);
+}
+.bidir-row .arrow{font-family:var(--mono);font-size:18px;flex:0 0 auto}
+.bidir-row.down .arrow{color:var(--orange)}
+.bidir-row.up .arrow{color:var(--mint)}
+.bidir-row b{color:var(--txt)}
+
+/* ---------- 层级解构 ---------- */
+.arch{display:grid;grid-template-columns:250px minmax(0,1fr);gap:20px;align-items:start}
+.layer-nav{display:flex;flex-direction:column;gap:8px;position:sticky;top:90px}
+.lnav-btn{
+  display:flex;align-items:center;gap:12px;width:100%;text-align:left;
+  padding:13px 14px;border-radius:10px;cursor:pointer;
+  background:var(--surface);border:1px solid var(--line);
+  color:var(--dim);font-family:var(--sans);font-size:14px;
+  transition:.22s;position:relative;overflow:hidden;
+}
+.lnav-btn .idx{font-family:var(--mono);font-size:10px;color:var(--faint);letter-spacing:.1em}
+.lnav-btn .nm{font-weight:600;color:var(--txt);transition:.22s}
+.lnav-btn .en{font-family:var(--mono);font-size:8.5px;letter-spacing:.13em;color:var(--faint);margin-top:2px}
+.lnav-btn:hover{border-color:var(--line-strong);background:var(--surface-2)}
+.lnav-btn.active{
+  border-color:color-mix(in srgb,var(--c) 45%,transparent);
+  background:linear-gradient(90deg,color-mix(in srgb,var(--c) 13%,transparent),transparent);
+  box-shadow:inset 2px 0 0 var(--c);
+}
+.lnav-btn.active .nm{color:var(--c)}
+.lnav-btn .dot{
+  width:7px;height:7px;border-radius:50%;background:var(--faint);flex:0 0 auto;transition:.22s;
+}
+.lnav-btn.active .dot{background:var(--c);box-shadow:0 0 10px var(--c)}
+
+.layer-panel{
+  border:1px solid var(--line);border-radius:14px;background:var(--surface);
+  padding:clamp(22px,3vw,34px);min-height:420px;
+  position:relative;overflow:hidden;
+}
+.layer-panel::before{
+  content:"";position:absolute;inset:0 0 auto 0;height:2px;
+  background:linear-gradient(90deg,var(--c),transparent 70%);
+}
+.panel-top{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:6px}
+.panel-top h3{font-size:clamp(20px,2.6vw,27px);font-weight:750;color:var(--c)}
+.panel-top .pen{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--faint)}
+.panel-q{
+  display:inline-block;margin-bottom:16px;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;color:var(--dim);
+  border:1px dashed var(--line-strong);border-radius:5px;padding:3px 10px;
+}
+.panel-lead{color:#b9c9d8;font-size:14.5px;line-height:1.95;margin-bottom:24px;max-width:900px}
+.panel-note{
+  margin-top:24px;padding:14px 18px;border-left:2px solid var(--c);
+  background:rgba(255,255,255,.022);border-radius:0 8px 8px 0;
+  font-size:13px;color:var(--dim);line-height:1.8;
+}
+.panel-note b{color:var(--txt)}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(238px,1fr));gap:11px}
+.card{
+  border:1px solid var(--line);border-radius:9px;padding:14px 16px;
+  background:rgba(255,255,255,.014);transition:.22s;position:relative;
+}
+.card:hover{
+  border-color:color-mix(in srgb,var(--c) 38%,transparent);
+  background:color-mix(in srgb,var(--c) 5%,transparent);
+  transform:translateY(-2px);
+}
+.card .ct{font-size:13.5px;font-weight:650;color:var(--txt);margin-bottom:5px;display:flex;gap:8px;align-items:baseline}
+.card .ct .cn{
+  font-family:var(--mono);font-size:9.5px;color:var(--c);opacity:.85;flex:0 0 auto;
+}
+.card .cd{font-size:12.5px;color:var(--dim);line-height:1.72}
+.panel-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:9px;margin:6px 0 24px}
+.pstat{border:1px solid var(--line);border-radius:8px;padding:11px 13px;background:rgba(34,211,238,.04)}
+.pstat .v{font-family:var(--mono);font-size:19px;font-weight:700;color:var(--cyan)}
+.pstat .v small{font-size:.55em;color:var(--dim);margin-left:2px}
+.pstat .l{font-size:11px;color:var(--dim);margin-top:2px}
+
+/* ---------- 协同链路 ---------- */
+.chain{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin-bottom:16px}
+.chain-step{
+  border:1px solid var(--line);border-radius:9px;background:var(--surface);
+  padding:13px 12px;cursor:pointer;transition:.22s;text-align:left;
+  font-family:var(--sans);color:var(--txt);position:relative;
+}
+.chain-step:hover{border-color:var(--line-strong);transform:translateY(-2px)}
+.chain-step.active{
+  border-color:rgba(34,211,238,.5);background:rgba(34,211,238,.09);
+  box-shadow:0 0 0 1px rgba(34,211,238,.15),0 8px 26px -14px rgba(34,211,238,.6);
+}
+.chain-step .sn{font-family:var(--mono);font-size:10px;color:var(--faint);letter-spacing:.12em}
+.chain-step.active .sn{color:var(--cyan)}
+.chain-step .st{font-size:13px;font-weight:650;margin-top:4px;line-height:1.45}
+.chain-step .sa{font-size:10.5px;color:var(--faint);margin-top:6px;font-family:var(--mono)}
+
+.chain-detail{
+  border:1px solid var(--line);border-radius:14px;background:var(--surface);
+  padding:clamp(20px,2.6vw,30px);margin-bottom:26px;
+}
+.cd-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.cd-head .num{font-family:var(--mono);font-size:22px;color:var(--cyan);font-weight:700;opacity:.75}
+.cd-head h3{font-size:clamp(18px,2.3vw,23px);font-weight:750}
+.cd-head .flow{font-family:var(--mono);font-size:11.5px;color:var(--dim);margin-left:auto}
+.cd-desc{color:#b9c9d8;font-size:14px;line-height:1.95;margin-bottom:20px;max-width:950px}
+.io{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:16px}
+.io-item{border:1px solid var(--line);border-radius:9px;padding:13px 15px;background:rgba(255,255,255,.014)}
+.io-item .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;margin-bottom:6px}
+.io-item.in .k{color:var(--mint)}
+.io-item.out .k{color:var(--amber)}
+.io-item .v{font-size:12.8px;color:var(--dim);line-height:1.75}
+.chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.chips .lbl{font-family:var(--mono);font-size:10px;color:var(--faint);letter-spacing:.12em;margin-right:4px}
+.chip{
+  font-size:11.5px;padding:3px 10px;border-radius:20px;
+  border:1px solid color-mix(in srgb,var(--c) 35%,transparent);
+  color:var(--c);background:color-mix(in srgb,var(--c) 8%,transparent);
+}
+
+/* 矩阵 */
+.matrix-wrap{border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:clamp(16px,2.4vw,26px);overflow-x:auto}
+.matrix-title{font-size:13px;color:var(--dim);margin-bottom:16px}
+.matrix-title b{color:var(--txt)}
+.matrix{display:grid;grid-template-columns:132px repeat(6,minmax(64px,1fr));gap:5px;min-width:620px}
+.m-h{
+  font-size:11px;text-align:center;color:var(--dim);padding:8px 4px;
+  border-bottom:1px solid var(--line);font-weight:600;letter-spacing:.03em;
+}
+.m-h.c-task{color:var(--c-task)} .m-h.c-sos{color:var(--c-sos)} .m-h.c-whole{color:var(--c-whole)}
+.m-h.c-system{color:var(--c-system)} .m-h.c-sub{color:var(--c-sub)} .m-h.c-module{color:var(--c-module)}
+.m-rl{
+  font-size:11.5px;color:var(--dim);padding:8px 8px 8px 0;display:flex;align-items:center;gap:7px;
+  font-family:var(--mono);
+}
+.m-rl .n{color:var(--faint);font-size:10px}
+.m-rl .t{font-family:var(--sans);color:var(--txt);font-size:11.5px}
+.m-row{display:contents}
+.m-cell{height:30px;border-radius:5px;background:rgba(255,255,255,.02);transition:.22s;border:1px solid transparent}
+.m-rl{cursor:pointer}
+.m-cell.on{background:rgba(34,211,238,.22);border-color:rgba(34,211,238,.4)}
+.m-cell.on.strong{background:rgba(34,211,238,.42);box-shadow:0 0 12px rgba(34,211,238,.28)}
+.m-row.active .m-rl .t{color:var(--cyan)}
+.m-row.active .m-cell.on{background:rgba(34,211,238,.4);border-color:rgba(34,211,238,.55)}
+.matrix-legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:14px;font-size:11px;color:var(--faint);font-family:var(--mono)}
+.matrix-legend span{display:flex;align-items:center;gap:6px}
+.matrix-legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
+
+/* ---------- 对象 ---------- */
+.obj-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:14px;margin-bottom:34px}
+.obj-card{border:1px solid var(--line);border-radius:13px;background:var(--surface);padding:20px;position:relative;overflow:hidden}
+.obj-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--c);opacity:.85}
+.obj-card .oh{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.obj-card .oh .tag{
+  font-family:var(--mono);font-size:9px;letter-spacing:.1em;padding:2px 7px;border-radius:4px;
+  border:1px solid color-mix(in srgb,var(--c) 40%,transparent);color:var(--c);
+  background:color-mix(in srgb,var(--c) 9%,transparent);
+}
+.obj-card .oh h3{font-size:15.5px;font-weight:700}
+.obj-list{list-style:none;display:flex;flex-direction:column;gap:9px}
+.obj-list li{padding-bottom:9px;border-bottom:1px dashed rgba(140,180,210,.09);display:flex;flex-direction:column;gap:2px}
+.obj-list li:last-child{border-bottom:none;padding-bottom:0}
+.obj-list .oi{font-size:12.8px;color:var(--txt);font-weight:600}
+.obj-list .od{font-size:11.8px;color:var(--dim);line-height:1.65}
+
+.rel-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
+.rel-card{border:1px solid var(--line);border-radius:11px;background:var(--surface);padding:17px 19px;transition:.22s}
+.rel-card:hover{border-color:var(--line-strong);transform:translateY(-2px)}
+.rel-card .rn{display:flex;align-items:center;gap:9px;margin-bottom:8px}
+.rel-card .rn .ri{font-family:var(--mono);font-size:10px;color:var(--amber);letter-spacing:.1em}
+.rel-card h4{font-size:14px;font-weight:700}
+.rel-card p{font-size:12.5px;color:var(--dim);line-height:1.75}
+
+/* ---------- 页脚 ---------- */
+footer{
+  border-top:1px solid var(--line);padding:34px clamp(20px,5vw,64px);
+  max-width:1320px;margin:0 auto;display:flex;justify-content:space-between;
+  gap:16px;flex-wrap:wrap;color:var(--faint);font-size:12px;font-family:var(--mono);
+  letter-spacing:.04em;
+}
+
+/* ---------- 动画 ---------- */
+.js .reveal{opacity:0;transform:translateY(22px);transition:opacity .75s cubic-bezier(.2,.7,.2,1),transform .75s cubic-bezier(.2,.7,.2,1)}
+.js .reveal.in{opacity:1;transform:none}
+
+/* ---------- 响应式 ---------- */
+@media(max-width:980px){
+  .arch{grid-template-columns:1fr}
+  .layer-nav{position:static;flex-direction:row;overflow-x:auto;gap:6px;padding-bottom:4px}
+  .lnav-btn{flex:0 0 auto;min-width:138px}
+  .chain{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .bidir{grid-template-columns:1fr}
+}
+@media(max-width:640px){
+  .chain{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .io{grid-template-columns:1fr}
+  .chainbar{flex-direction:column}
+  .cb-node{border-right:none;border-bottom:1px solid var(--line)}
+  .matrix{grid-template-columns:96px repeat(6,minmax(42px,1fr))}
+  .m-rl .t{font-size:10.5px}
+}
+</style>
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="bg-glow"></div>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark"></span>
+    <span class="brand-text">WHEEL-LEGGED UCP <b>/ 轮腿式无人作战平台</b></span>
+  </div>
+  <nav class="topnav">
+    <a href="#arch">层级解构</a>
+    <a href="#synergy">协同链路</a>
+    <a href="#objects">体系对象</a>
+    <a href="#spec">整机指标</a>
+  </nav>
+</header>
+
+<main>
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="kicker">COMPLEX SYSTEM / WHOLE-PLATFORM DECOMPOSITION</div>
+    <h1>轮腿式<br /><em>无人作战平台</em></h1>
+    <p class="hero-sub">
+      以「整机」为轴心 —— 向上承接<b>任务</b>与<b>体系</b>，向下分解<b>系统</b>、<b>子系统</b>与<b>模块</b>。
+      一条从作战需求贯穿到最小功能单元、再由单元能力反哺作战效能的<b>双向链路</b>。
+    </p>
+
+    <div class="chainbar" id="chainbar"></div>
+    <div class="stats" id="heroStats"></div>
+  </section>
+
+  <!-- ============ 01 层级解构 ============ -->
+  <section class="sec" id="arch">
+    <div class="sec-head reveal">
+      <span class="sec-no">01 / LAYER DECOMPOSITION</span>
+      <h2>全层级解构</h2>
+      <p>
+        复杂系统的难点不在零件，而在<b>层与层之间的对应关系</b>。向下看，每一层都在回答上一层提出的“靠什么实现”；
+        向上看，每一层都是下层能力的<b>组合与涌现</b>。
+      </p>
+    </div>
+
+    <div class="bidir reveal">
+      <div class="bidir-row down">
+        <span class="arrow">↓</span>
+        <span><b>需求分解</b>：任务 → 体系 → 整机 → 系统 → 子系统 → 模块</span>
+      </div>
+      <div class="bidir-row up">
+        <span class="arrow">↑</span>
+        <span><b>能力涌现</b>：模块 → 子系统 → 系统 → 整机 → 体系 → 任务</span>
+      </div>
+    </div>
+
+    <div class="arch reveal">
+      <aside class="layer-nav" id="layerNav" role="tablist" aria-label="层级导航"></aside>
+      <div class="layer-panel" id="layerPanel" role="tabpanel"></div>
+    </div>
+  </section>
+
+  <!-- ============ 02 协同链路 ============ -->
+  <section class="sec" id="synergy">
+    <div class="sec-head reveal">
+      <span class="sec-no">02 / MISSION–SOS–SYSTEM SYNERGY</span>
+      <h2>任务 · 体系 · 系统 的协同</h2>
+      <p>
+        协同不是三张分开的图，而是<b>同一条任务流在不同层同时在线</b>。
+        选择下方任一环节，可以看到这一刻任务层、体系层、系统层各自在做什么、交换了什么。
+      </p>
+    </div>
+
+    <div class="chain reveal" id="chain"></div>
+    <div class="chain-detail reveal" id="chainDetail"></div>
+
+    <div class="matrix-wrap reveal">
+      <div class="matrix-title"><b>跨层参与矩阵</b> —— 横轴为六个层级，纵轴为任务链路环节，点亮表示该环节中此层正在承担职责</div>
+      <div class="matrix" id="matrix"></div>
+      <div class="matrix-legend">
+        <span><i style="background:rgba(34,211,238,.22);border:1px solid rgba(34,211,238,.4)"></i> 参与</span>
+        <span><i style="background:rgba(34,211,238,.42)"></i> 主导</span>
+        <span style="color:var(--dim)">同一行中，越靠右说明越下探到实现细节；同一列中，越黑说明该层介入越深</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 03 体系对象 ============ -->
+  <section class="sec" id="objects">
+    <div class="sec-head reveal">
+      <span class="sec-no">03 / OBJECTS &amp; RELATIONS</span>
+      <h2>体系内对象与关系</h2>
+      <p>
+        平台再强，也只是网络里的一个节点。它面对的是一张<b>四类对象共存的图</b>：己方、敌方、中立与约束、环境与信息域。
+        每一类对象都对应一组输入输出关系。
+      </p>
+    </div>
+
+    <div class="obj-grid" id="objGrid"></div>
+
+    <div class="sec-head reveal" style="margin-top:10px">
+      <span class="sec-no">RELATIONS</span>
+      <h2 style="font-size:clamp(19px,2.4vw,24px)">六种核心关系</h2>
+      <p>协同的本质，是这六条关系在同一时间轴上互不打架、互相补位。</p>
+    </div>
+    <div class="rel-grid" id="relGrid"></div>
+  </section>
+
+  <!-- ============ 04 指标 ============ -->
+  <section class="sec" id="spec">
+    <div class="sec-head reveal">
+      <span class="sec-no">04 / PLATFORM SPEC</span>
+      <h2>整机级指标约束</h2>
+      <p>指标是层层定义的终点，也是体系对平台的<b>硬约束</b>。它们不是性能表，而是“能否承担该任务”的门槛。</p>
+    </div>
+    <div class="stats reveal" id="specStats"></div>
+
+    <div class="bidir reveal" style="margin-top:26px">
+      <div class="bidir-row down">
+        <span class="arrow">↓</span>
+        <span>任务要求 → 体系分工 → 整机指标 → 系统指标 → 子系统指标 → 模块参数</span>
+      </div>
+      <div class="bidir-row up">
+        <span class="arrow">↑</span>
+        <span>指标一旦被分解到模块层，就变成<b>可采购、可测试、可迭代</b>的工程条目</span>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>WHEEL-LEGGED UNMANNED COMBAT PLATFORM · LAYERED ARCHITECTURE BRIEF</span>
+    <span>任务 — 体系 — 整机 — 系统 — 子系统 — 模块</span>
+  </footer>
+</main>
+
+<script>
+/* ================= 数据层 ================= */
+const LAYERS = [
+  {
+    key:'task', name:'任务层', en:'TASK', color:'var(--c-task)', q:'为什么存在',
+    lead:'在城市、室内及非结构化复杂地形中，作为智能作战体系的前沿机动节点，遂行侦察监视、目标指示、火力引导与有限自主打击任务，并支持有人无人协同编组下的弹性组网与跨域杀伤链闭环。',
+    items:[
+      {t:'隐蔽抵近侦察', d:'利用轮式高速性快速占领要点，利用足式越障能力进入废墟、楼梯间、室内死角，回传实时视频与目标坐标。'},
+      {t:'目标精确定位与引导', d:'为后方火力单元（巡飞弹、远程火炮、无人机）提供末端目标标定与毁伤评估。'},
+      {t:'自主伴随打击', d:'搭载轻量化武器站，在授权范围内对突发高价值目标实施短停射击或行进间压制。'},
+      {t:'体系节点中继', d:'在通信拒止环境下充当边缘计算与通信中继节点，维持杀伤网连通性。'}
+    ],
+    note:'任务层定义“打什么、在哪打、打到什么程度”，是所有下层设计的唯一源头。它一变，下面六层全部要跟着重新分配权重。'
+  },
+  {
+    key:'sos', name:'体系层', en:'SYSTEM OF SYSTEMS', color:'var(--c-sos)', q:'和谁一起打',
+    lead:'轮腿式平台不是孤立作战单元，而是分布式智能杀伤网中的一个可消耗、可重构的边缘节点。它的价值取决于“接入体系的程度”，而不是单机性能。',
+    items:[
+      {t:'跨域协同', d:'接受上级无人作战体系（含无人机、无人车、巡飞弹集群）的任务式指挥，将自身感知数据注入全域态势图，并响应体系下发的打击指令。'},
+      {t:'弹性组网与抗毁重构', d:'采用分布式组网架构，当局部节点损毁或链路中断时，平台可自主补位或切换通信中继路径，保持杀伤链不中断。'},
+      {t:'标准化接口与即插即用', d:'硬件与软件接口遵循体系通用标准，任务载荷（侦察模块、打击模块、电子战模块）可快速换装，实现“一平台多任务”的体系适配性。'}
+    ],
+    note:'体系层回答“平台如何嵌入更大的作战网络”，它决定的是接口标准、协同协议与指挥关系，而不是某个零件。'
+  },
+  {
+    key:'whole', name:'整机层', en:'WHOLE PLATFORM', color:'var(--c-whole)', q:'用什么平台',
+    lead:'全肘-轮躯式轮腿复合无人作战平台。兼顾轮式高效机动（铺装路面/平整地面）与足式高通过性（楼梯/废墟/壕沟），具备原地转向、姿态调整与射击稳定能力。',
+    stats:[
+      {v:'≥ 10', u:'km/h', l:'轮式最大速度'},
+      {v:'≥ 0.25', u:'m', l:'足式越障高度'},
+      {v:'≤ 35', u:'°', l:'可攀爬斜坡'},
+      {v:'≥ 0.4', u:'m', l:'跨越壕沟宽度'},
+      {v:'≥ 15', u:'kg', l:'有效搭载重量'},
+      {v:'三级', u:'', l:'遥控 / 半自主 / 全自主'}
+    ],
+    items:[
+      {t:'移动能力', d:'轮式最大速度 ≥ 10 km/h（静默侦察模式可低速静音），足式越障高度 ≥ 0.25 m，可攀爬 ≤ 35° 斜坡与标准楼梯，跨越壕沟宽度 ≥ 0.4 m。'},
+      {t:'载荷能力', d:'有效搭载重量 ≥ 15 kg（含武器站、传感器、计算单元与电池），预留标准化机械/电气接口。'},
+      {t:'自主等级', d:'具备远程遥控、半自主（指定路径/目标）与全自主（划定区域内自主搜索与识别）三级模式，支持体系任务式指挥接入。'},
+      {t:'隐身与生存', d:'低红外特征设计（电机与电池热管理遮蔽），雷达散射截面控制（非金属复合材料外壳），具备声学静音模式（纯电驱动低速行驶）。'}
+    ],
+    note:'整机层是一个“折中点”：速度对通过性、载荷对续航、隐身对散热。指标约束的本质，是在任务需求下找平衡，而不是把每一项都做到极致。'
+  },
+  {
+    key:'system', name:'系统层', en:'SYSTEM', color:'var(--c-system)', q:'靠哪些大块',
+    lead:'将整机划分为六大功能系统，构成平台级能力骨架。六者之间通过机械、电气、数据三类接口耦合，任何一者的性能短板都会首先在整机层暴露。',
+    items:[
+      {t:'轮腿复合移动系统', d:'提供轮式/足式两种运动模态及切换能力，承载整机机动与姿态稳定。'},
+      {t:'智能感知与导航系统', d:'多传感器融合环境感知、SLAM 定位、自主路径规划与目标识别。'},
+      {t:'作战载荷与武器管理系统', d:'承载并控制轻量化武器站/侦察载荷，管理射击授权、瞄准与后坐缓冲。'},
+      {t:'指挥控制与通信系统', d:'接入体系指挥网络，处理任务指令、上报态势、维持链路冗余。'},
+      {t:'能源与热管理系统', d:'高能量密度电池组供电、功率分配、热隐身管理与续航保障。'},
+      {t:'结构与防护系统', d:'承载各系统机械集成，提供轻量化车身、碰撞防护与一定程度的装甲防护。'}
+    ],
+    note:'系统层的划分原则是“功能闭环”：每个系统都能独立回答一个能力问题，同时又能被体系接口统一调用。'
+  },
+  {
+    key:'subsystem', name:'子系统层', en:'SUBSYSTEM', color:'var(--c-sub)', q:'拆到什么程度',
+    lead:'子系统是系统的功能切片 —— 每个子系统对应一个可独立验证、可独立测试的能力单元。16 个子系统覆盖平台全部功能面。',
+    items:[
+      {t:'轮驱/转向', n:'1.1', d:'四轮独立驱动（轮毂电机或轮边电机），具备差速转向与原地转向能力；轮式模式下高效巡航。'},
+      {t:'腿部摆动作动', n:'1.2', d:'髋关节/膝关节摆动作动器，实现足式步态（行走、攀爬、跨越）及轮式模式下的悬架姿态调节（如车身调平、射击俯仰补偿）。'},
+      {t:'悬架与减震', n:'1.3', d:'被动/半主动悬架，吸收路面冲击，保证传感器与武器站稳定；射击时切换为刚性锁定模式。'},
+      {t:'环境感知', n:'2.1', d:'激光雷达、深度相机、超声波/红外传感器阵列，实现 360° 近距避障与地形可通行性评估。'},
+      {t:'定位与建图', n:'2.2', d:'视觉-惯性-轮式里程计融合，在 GPS 拒止环境下实现室内外无缝定位与地图构建。'},
+      {t:'目标探测与识别', n:'2.3', d:'可见光/红外双光吊舱或固定相机，基于深度学习算法实现人员、车辆、工事等目标的自动检测与分类。'},
+      {t:'武器站伺服', n:'3.1', d:'两轴（方位/俯仰）高精度伺服驱动，接收火控指令完成瞄准线稳定与自动跟踪。'},
+      {t:'射击控制与后坐管理', n:'3.2', d:'击发控制逻辑（含授权验证）、后坐力缓冲机构（基于虚拟模型控制或弹簧-阻尼吸能），保证射击后平台姿态快速恢复。'},
+      {t:'载荷快换接口', n:'3.3', d:'标准化机械锁紧 + 电气/数据盲插接口，支持侦察模块、轻武器模块、电子战模块的快速互换。'},
+      {t:'任务计算', n:'4.1', d:'边缘 AI 计算单元（如 Jetson 或国产等效平台），运行感知、规划与目标识别算法，并与体系云端/指挥端协同计算。'},
+      {t:'战术通信', n:'4.2', d:'多链路冗余（自组网电台 + 蜂窝/卫星备份），支持体系数据链协议接入，具备抗干扰与低截获概率通信能力。'},
+      {t:'有人无人协同接口', n:'4.3', d:'接收有人平台（指挥车、步兵班长终端）的任务式指令，回传状态与请求，支持编组内协同定位与目标分配。'},
+      {t:'电池与配电管理', n:'5.1', d:'高能量密度锂电池组，BMS 实现单体监控与均衡；智能配电板按任务模式动态分配功率（如足式越障时优先保障作动器峰值电流）。'},
+      {t:'热隐身与散热', n:'5.2', d:'液冷/相变材料散热与红外遮蔽结构结合，在静默侦察模式下降低热特征，在高速机动/射击模式下保证散热不降频。'},
+      {t:'轻量化车身', n:'6.1', d:'碳纤维/铝合金混合框架，兼顾刚度与重量；内部设备舱模块化分区。'},
+      {t:'防护与伪装', n:'6.2', d:'可拆卸复合装甲板（针对轻武器与破片），可选配多光谱伪装罩/发射器。'}
+    ],
+    note:'子系统的“切法”决定了后续维护方式：切得太粗无法独立更换，切得太细则接口成本爆炸。这里的 16 个切分是围绕“可独立验证”展开的。'
+  },
+  {
+    key:'module', name:'模块层', en:'MODULE', color:'var(--c-module)', q:'最小单元是什么',
+    lead:'以可独立更换、升级的最小功能单元为粒度。模块是采购、测试、迭代的真实抓手 —— 也是整机能否“持续演进”的物理基础。',
+    items:[
+      {t:'轮驱/转向', n:'M1', d:'轮毂电机模块、转向伺服模块、制动模块'},
+      {t:'腿部作动', n:'M2', d:'髋关节作动器模块、膝关节作动器模块、足端轮模块（可锁死/自由滚动）'},
+      {t:'悬架减震', n:'M3', d:'阻尼可调减震器模块、刚性锁定机构模块'},
+      {t:'环境感知', n:'M4', d:'激光雷达模块、深度相机模块、超声波阵列模块'},
+      {t:'定位建图', n:'M5', d:'IMU 模块、轮式里程计编码器模块、GNSS/RTK 模块（可选）'},
+      {t:'目标识别', n:'M6', d:'双光光电吊舱模块、AI 推理计算卡模块'},
+      {t:'武器伺服', n:'M7', d:'方位伺服电机模块、俯仰伺服电机模块、瞄准线稳定控制板'},
+      {t:'射击控制', n:'M8', d:'击发执行机构模块、后坐缓冲吸能模块、授权验证加密模块'},
+      {t:'任务计算', n:'M9', d:'边缘 AI 计算单元模块、数据存储模块'},
+      {t:'战术通信', n:'M10', d:'自组网电台模块、卫通/蜂窝通信模块、天线模块'},
+      {t:'协同接口', n:'M11', d:'体系数据链接口板、有人终端交互平板模块'},
+      {t:'能源', n:'M12', d:'电池包模块、BMS 模块、智能配电板模块'},
+      {t:'热管理', n:'M13', d:'液冷泵/散热器模块、红外遮蔽板模块'},
+      {t:'结构防护', n:'M14', d:'复合装甲板模块、快拆车身面板模块'}
+    ],
+    note:'模块化不是把东西做小，而是让“更换”成为设计前提：接口标准、安装方式、测试流程都要在模块层被固化下来。'
+  }
+];
+
+/* 任务链路 */
+const CHAIN = [
+  {
+    n:'01', t:'任务下达', f:'上级指控节点 → 轮腿平台', layers:[0,1,3,4,5], strong:[1],
+    d:'上级指控节点通过数据链向轮腿平台发送指令：区域 A 抵近侦察，优先级为时敏目标（敌方装甲车活动）。平台接收任务包，确认自身状态（电量 ≥ 60%、武器站待命），回传确认信号。',
+    io:{in:'区域抵近侦察指令、优先级、交战规则（ROE）、敌我识别码更新', out:'任务确认信号、自身状态（位置/电量/健康度）'}
+  },
+  {
+    n:'02', t:'前出机动', f:'平台 ↔ 环境', layers:[2,3,4,5], strong:[2],
+    d:'平台以轮式模式沿道路高速接近，进入复杂地形后切换足式。感知模块实时输出地形可通行性、障碍物位置。平台向指控节点回传“行进中”状态及位置更新。',
+    io:{in:'地形数据、障碍物信息、可通行性评估', out:'行进状态、位置更新、模式切换记录'}
+  },
+  {
+    n:'03', t:'协同侦察', f:'平台 ↔ 友邻无人机', layers:[0,1,3,4,5], strong:[1],
+    d:'抵达侦察位置后，平台释放或召唤配属微型无人机升空。无人机提供俯视图像，平台提供地面近距图像。两者数据在平台计算单元或上级节点融合，形成目标初步定位，上报目标坐标、类型与置信度。',
+    io:{in:'友邻无人机共享态势、目标交接指令', out:'局部态势、目标坐标/类型/置信度'}
+  },
+  {
+    n:'04', t:'目标交接与火力召唤', f:'平台 → 指控 → 火力单元', layers:[0,1,3,4,5], strong:[3],
+    d:'指控节点确认目标后，将打击任务分配给火力单元（有人迫击炮或无人机）。平台持续跟踪目标，提供激光指示或实时坐标修正。火力单元完成射击后，平台回传毁伤评估（命中/未命中/需补射）。',
+    io:{in:'打击指令、火力单元状态', out:'目标指示、坐标修正、毁伤评估报告'}
+  },
+  {
+    n:'05', t:'平民规避', f:'平台 ↔ 指控节点', layers:[0,1,3,4,5], strong:[0],
+    d:'侦察过程中，视觉模块检测到目标附近有平民活动或民用车辆。平台自动向指控节点发送“平民存在告警”，附带图像截取与坐标范围。指控节点据此决定是否暂缓打击或调整武器选择，平台记录该告警作为交战合规证据链的一部分。',
+    io:{in:'平民/民用物体识别结果、行为约束', out:'平民存在告警、附带损伤预估、建议暂缓打击'}
+  },
+  {
+    n:'06', t:'任务结束与回收', f:'平台 → 保障节点 → 指控', layers:[1,3,4,5], strong:[3],
+    d:'平台完成侦察任务后，向指控节点申请返回路线。途中若电量低于阈值，自动向保障节点发送补给/回收请求。返回后上传完整任务日志（感知数据、交战记录、系统健康数据）。',
+    io:{in:'返回路线批准、补给/回收响应', out:'任务日志、故障代码、战损报告'}
+  }
+];
+
+/* 体系对象 */
+const OBJECTS = [
+  { tag:'BLUE', title:'己方对象', color:'var(--mint)', items:[
+    {i:'上级指控节点', d:'营/连级指挥所、无人系统控制站、体系任务规划节点 —— 指令下达、任务分配、态势汇总'},
+    {i:'友邻无人平台', d:'侦察无人机、察打无人机、其他地面无人车、机器狼/机器狗分队 —— 协同感知、目标交接、编队配合'},
+    {i:'有人作战单元', d:'伴随步兵分队、有人战车、火力支援单元 —— 伴随跟随、火力召唤、直接支援'},
+    {i:'保障节点', d:'前进补给点、维修回收组、医疗后送单元 —— 物资前送、故障回收、战损后送'},
+    {i:'平台自身载荷', d:'武器站模块、侦察传感器模块、物资箱模块 —— 机械/电气/数据接口，功能扩展'}
+  ]},
+  { tag:'RED', title:'敌方对象', color:'var(--red,#f87171)', items:[
+    {i:'敌方作战人员', d:'步兵、反装甲手、无人机操作员 —— 目标探测、压制、规避'},
+    {i:'敌方有人平台', d:'坦克/装甲车、直升机、固定翼对地攻击机 —— 威胁规避、召唤火力打击'},
+    {i:'敌方无人平台', d:'侦察无人机、自杀式 FPV、无人地面车 —— 反无人作战、电子干扰、规避'},
+    {i:'敌方固定设施', d:'工事、指挥所、通信节点、雷达站 —— 目标指示、火力引导'},
+    {i:'敌方电子与网络节点', d:'通信干扰源、GPS 干扰器、数据链节点 —— 电磁规避、抗干扰、反辐射引导'}
+  ]},
+  { tag:'NEUTRAL', title:'中立方与受限对象', color:'var(--amber)', items:[
+    {i:'平民个体', d:'平民、难民、被胁迫人员 —— 识别区分、避免误伤、行为约束'},
+    {i:'民用物体', d:'民用车辆、住宅、学校、医院 —— 避免攻击、附带损伤评估'},
+    {i:'民用基础设施', d:'电力、供水、通信设施 —— 避免作为军事目标，除非被军事利用'},
+    {i:'人道组织与设施', d:'医疗队、救援车队 —— 识别避让，不干扰'}
+  ]},
+  { tag:'ENV', title:'环境与信息域对象', color:'var(--cyan)', items:[
+    {i:'地形与障碍', d:'道路、楼梯、废墟、水域、植被 —— 通行性判断、路径规划、轮腿模式切换'},
+    {i:'气象条件', d:'雨、雾、烟尘、风速 —— 传感器性能降级、机动能力限制'},
+    {i:'电磁环境', d:'通信频谱、GPS 信号质量、敌方干扰强度 —— 链路可用性判断、自主模式切换'},
+    {i:'赛博空间节点', d:'己方数据链网络、敌方网络攻击源 —— 接入安全、抗欺骗、数据完整性校验'}
+  ]}
+];
+
+/* 六种关系 */
+const RELATIONS = [
+  {n:'R1', t:'指控关系（上下）', d:'输入任务指令、路径点、ROE、识别码；输出自身状态、侦察数据、交战报告。'},
+  {n:'R2', t:'协同关系（横向）', d:'与友邻无人平台交换共享态势图、目标交接指令与编队位置，形成互补覆盖。'},
+  {n:'R3', t:'伴随关系（人机）', d:'跟随步兵分队位置与避障约束，回传前出画面、威胁告警与弹药/电量余量。'},
+  {n:'R4', t:'交战关系（对抗）', d:'探测、瞄准、火力投射；同时承受敌方火力反击、电子干扰、欺骗信号与规避机动。'},
+  {n:'R5', t:'约束关系（平民）', d:'按区分原则与比例原则提供分类信息，向人类决策者输出平民告警与附带损伤预估。'},
+  {n:'R6', t:'能量与物质流（保障）', d:'接收电池/弹药补给与维修备件；输出故障代码、战损报告与回收请求。'}
+];
+
+/* 指标 */
+const SPEC = [
+  {v:'≥ 10', u:'km/h', l:'轮式最大速度'},
+  {v:'≥ 0.25', u:'m', l:'足式越障高度'},
+  {v:'≤ 35', u:'°', l:'可攀爬斜坡 / 标准楼梯'},
+  {v:'≥ 0.4', u:'m', l:'跨越壕沟宽度'},
+  {v:'≥ 15', u:'kg', l:'有效搭载重量'},
+  {v:'三级', u:'', l:'遥控 / 半自主 / 全自主'}
+];
+
+/* ================= 渲染 ================= */
+const $ = (s, r=document) => r.querySelector(s);
+
+function statHTML(s){
+  return `<div class="stat"><div class="v">${s.v}<small>${s.u}</small></div><div class="l">${s.l}</div></div>`;
+}
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+/* 顶部链路条 */
+$('#chainbar').innerHTML = LAYERS.map((l,i)=>`
+  <div class="cb-node ${l.key==='whole'?'pivot':''}" style="--c:${l.color}">
+    <div class="cb-cn">${l.name}</div>
+    <div class="cb-en">${l.en}</div>
+  </div>`).join('');
+
+/* 首屏与指标区数字 */
+$('#heroStats').innerHTML = SPEC.slice(0,4).map(statHTML).join('');
+$('#specStats').innerHTML = SPEC.map(statHTML).join('');
+
+/* ---- 层级导航 ---- */
+const nav = $('#layerNav');
+nav.innerHTML = LAYERS.map((l,i)=>`
+  <button class="lnav-btn" role="tab" data-i="${i}" style="--c:${l.color}">
+    <span class="dot"></span>
+    <span>
+      <span class="nm">${l.name}</span>
+      <span class="en" style="display:block">${l.en}</span>
+    </span>
+    <span class="idx" style="margin-left:auto">0${i+1}</span>
+  </button>`).join('');
+
+function renderLayer(i){
+  const l = LAYERS[i];
+  const panel = $('#layerPanel');
+  panel.style.setProperty('--c', l.color);
+  panel.innerHTML = `
+    <div class="panel-top">
+      <h3>${l.name}</h3>
+      <span class="pen">${l.en}</span>
+    </div>
+    <div class="panel-q">${l.q}？</div>
+    <p class="panel-lead">${l.lead}</p>
+    ${l.stats ? `<div class="panel-stats">${l.stats.map(s=>`
+      <div class="pstat"><div class="v">${s.v}<small>${s.u}</small></div><div class="l">${s.l}</div></div>`).join('')}</div>` : ''}
+    <div class="cards">
+      ${l.items.map(it=>`
+        <div class="card">
+          <div class="ct">${it.n?`<span class="cn">${it.n}</span>`:''}${it.t}</div>
+          <div class="cd">${it.d}</div>
+        </div>`).join('')}
+    </div>
+    <div class="panel-note">${l.note}</div>
+  `;
+  [...nav.children].forEach((b,idx)=>b.classList.toggle('active', idx===i));
+}
+
+nav.addEventListener('click', e=>{
+  const btn = e.target.closest('.lnav-btn');
+  if(!btn) return;
+  renderLayer(Number(btn.dataset.i));
+});
+renderLayer(0);
+
+/* ---- 任务链路 ---- */
+$('#chain').innerHTML = CHAIN.map((c,i)=>`
+  <button class="chain-step ${i===0?'active':''}" data-i="${i}">
+    <div class="sn">${c.n}</div>
+    <div class="st">${c.t}</div>
+    <div class="sa">${c.f}</div>
+  </button>`).join('');
+
+function renderChain(i){
+  const c = CHAIN[i];
+  $('#chainDetail').innerHTML = `
+    <div class="cd-head">
+      <span class="num">${c.n}</span>
+      <h3>${c.t}</h3>
+      <span class="flow">${c.f}</span>
+    </div>
+    <p class="cd-desc">${c.d}</p>
+    <div class="io">
+      <div class="io-item in"><div class="k">INPUT / 向上游接收</div><div class="v">${c.io.in}</div></div>
+      <div class="io-item out"><div class="k">OUTPUT / 向下游输出</div><div class="v">${c.io.out}</div></div>
+    </div>
+    <div class="chips">
+      <span class="lbl">INVOLVED LAYERS</span>
+      ${c.layers.map(li=>`<span class="chip" style="--c:${LAYERS[li].color}">${LAYERS[li].name}</span>`).join('')}
+    </div>`;
+  [...$('#chain').children].forEach((b,idx)=>b.classList.toggle('active', idx===i));
+  [...document.querySelectorAll('.m-row')].forEach((r,idx)=>r.classList.toggle('active', idx===i));
+}
+
+$('#chain').addEventListener('click', e=>{
+  const b = e.target.closest('.chain-step');
+  if(b) renderChain(Number(b.dataset.i));
+});
+
+/* ---- 矩阵 ---- */
+const matrix = $('#matrix');
+let mHTML = '<div class="m-h" style="text-align:left;padding-left:2px">任务链路 \\ 层级</div>';
+mHTML += LAYERS.map(l=>`<div class="m-h c-${l.key}">${l.name.replace('层','')}</div>`).join('');
+CHAIN.forEach((c,ci)=>{
+  mHTML += `<div class="m-row" data-i="${ci}">`;
+  mHTML += `<div class="m-rl"><span class="n">${c.n}</span><span class="t">${c.t}</span></div>`;
+  LAYERS.forEach((l,li)=>{
+    const on = c.layers.includes(li);
+    const strong = c.strong.includes(li);
+    mHTML += `<div class="m-cell ${on?'on':''} ${strong?'strong':''}"></div>`;
+  });
+  mHTML += `</div>`;
+});
+matrix.innerHTML = mHTML;
+matrix.addEventListener('click', e=>{
+  const row = e.target.closest('.m-row');
+  if(row) renderChain(Number(row.dataset.i));
+});
+
+renderChain(0);
+
+/* ---- 对象 ---- */
+$('#objGrid').innerHTML = OBJECTS.map(o=>`
+  <div class="obj-card" style="--c:${o.color}">
+    <div class="oh"><span class="tag">${o.tag}</span><h3>${o.title}</h3></div>
+    <ul class="obj-list">
+      ${o.items.map(it=>`<li><span class="oi">${it.i}</span><span class="od">${it.d}</span></li>`).join('')}
+    </ul>
+  </div>`).join('');
+
+$('#relGrid').innerHTML = RELATIONS.map(r=>`
+  <div class="rel-card">
+    <div class="rn"><span class="ri">${r.n}</span><h4>${r.t}</h4></div>
+    <p>${r.d}</p>
+  </div>`).join('');
+
+/* ---- 滚动进场 ---- */
+const io = new IntersectionObserver(entries=>{
+  entries.forEach(en=>{ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } });
+},{threshold:0.02, rootMargin:'0px 0px -50px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+// 兜底：若观察器异常或元素长期未进入视口，3.5 秒后直接显示，避免内容空白
+setTimeout(()=>{
+  document.querySelectorAll('.reveal:not(.in)').forEach(el=>{
+    if(el.getBoundingClientRect().top < innerHeight) el.classList.add('in');
+  });
+},3500);
+</script>
+</body>
+</html>
