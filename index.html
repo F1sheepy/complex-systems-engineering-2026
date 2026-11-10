@@ -33,7 +33,7 @@
 html{scroll-behavior:smooth;scroll-padding-top:84px}
 body{
   background:var(--bg);color:var(--txt);font-family:var(--sans);
-  font-size:15px;line-height:1.75;-webkit-font-smoothing:antialiased;
+  font-size:16px;line-height:1.75;-webkit-font-smoothing:antialiased;
   overflow-x:hidden;
 }
 /* ---------- 背景 ---------- */
@@ -71,7 +71,7 @@ main{position:relative;z-index:1}
   animation:pulse 2.6s ease-in-out infinite;
 }
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
-.brand-text{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--faint);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand-text{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;color:var(--faint);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .brand-text b{color:var(--txt);font-weight:600;letter-spacing:.06em}
 .topnav{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
 .topnav a{
@@ -83,7 +83,7 @@ main{position:relative;z-index:1}
 /* ---------- Hero ---------- */
 .hero{padding:clamp(56px,9vw,110px) clamp(20px,5vw,64px) clamp(24px,3vw,40px);max-width:1320px;margin:0 auto}
 .kicker{
-  font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--cyan);
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.22em;color:var(--cyan);
   display:flex;align-items:center;gap:12px;margin-bottom:26px;
 }
 .kicker::before{content:"";width:38px;height:1px;background:var(--cyan);opacity:.7}
@@ -97,21 +97,17 @@ main{position:relative;z-index:1}
   -webkit-background-clip:text;background-clip:text;
 }
 
-/* 六层切换卡 */
-.chainbar{
-  display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin-bottom:20px;
-}
+/* ---------- 层级切换卡 ---------- */
+.chainbar{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin-bottom:20px}
 .cb-node{
-  padding:15px 14px 14px;position:relative;min-width:0;overflow:hidden;
+  padding:16px 15px 15px;position:relative;min-width:0;overflow:hidden;
   border:1px solid var(--line);border-radius:9px;
   background:var(--surface);font-family:var(--sans);text-align:left;cursor:pointer;
   transition:.22s;
 }
-.cb-node::before{
-  content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--c);opacity:.9;
-}
-.cb-node .cb-cn{display:block;font-size:15px;font-weight:700;color:var(--c);letter-spacing:.04em}
-.cb-node .cb-en{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--faint);margin-top:3px}
+.cb-node::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--c);opacity:.9}
+.cb-node .cb-cn{display:block;font-size:16px;font-weight:700;color:var(--c);letter-spacing:.04em}
+.cb-node .cb-en{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--faint);margin-top:3px}
 .cb-node:hover{border-color:var(--line-strong);background:var(--surface-2);transform:translateY(-2px)}
 .cb-node.active{
   border-color:color-mix(in srgb,var(--c) 50%,transparent);
@@ -122,10 +118,54 @@ main{position:relative;z-index:1}
 .cb-node.pivot.active{background:linear-gradient(180deg,rgba(34,211,238,.18),rgba(34,211,238,.04))}
 .cb-node.pivot::before{width:3px;opacity:1}
 .cb-node.pivot::after{
-  content:"轴心";position:absolute;top:6px;right:8px;
-  font-family:var(--mono);font-size:8px;letter-spacing:.1em;color:var(--cyan);
-  border:1px solid rgba(34,211,238,.35);border-radius:3px;padding:0 4px;
+  content:"轴心";position:absolute;top:7px;right:9px;
+  font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--cyan);
+  border:1px solid rgba(34,211,238,.35);border-radius:3px;padding:0 5px;
 }
+
+/* ---------- 层级树 ---------- */
+.layer-tree{display:flex;align-items:center;gap:34px;margin:6px 0 2px}
+.lt-root{
+  flex:0 0 auto;min-width:168px;padding:20px 18px;border-radius:12px;position:relative;
+  border:1px solid color-mix(in srgb,var(--c) 45%,transparent);
+  background:color-mix(in srgb,var(--c) 10%,transparent);text-align:center;
+}
+.lt-root::after{
+  content:"";position:absolute;right:-43px;top:50%;width:43px;height:1px;
+  background:color-mix(in srgb,var(--c) 40%,transparent);
+}
+.lt-root-name{display:block;font-size:21px;font-weight:750;color:var(--c);line-height:1.2}
+.lt-root-en{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--faint);margin-top:5px}
+.lt-branches{position:relative;flex:1;display:flex;flex-direction:column;gap:10px;padding-left:30px}
+.lt-branches::before{
+  content:"";position:absolute;left:9px;top:var(--lt-top,24px);bottom:var(--lt-bottom,24px);width:1px;
+  background:color-mix(in srgb,var(--c) 40%,transparent);
+}
+.lt-branches > .lt-node::before,
+.lt-branches > .lt-group::before{
+  content:"";position:absolute;left:-21px;top:50%;width:21px;height:1px;
+  background:color-mix(in srgb,var(--c) 40%,transparent);
+}
+.lt-node{
+  position:relative;padding:11px 16px;border:1px solid var(--line);border-radius:9px;
+  background:rgba(255,255,255,.015);transition:.2s;
+}
+.lt-node:hover{border-color:var(--line-strong);background:rgba(255,255,255,.03)}
+.lt-t{display:block;font-size:14.5px;font-weight:650;color:var(--txt);line-height:1.45}
+.lt-t i{font-family:var(--mono);font-style:normal;font-size:11px;color:var(--c);margin-right:9px;opacity:.85}
+.lt-d{display:block;font-size:13px;color:var(--dim);line-height:1.7;margin-top:3px}
+.lt-group{
+  position:relative;border:1px solid var(--line);border-radius:11px;
+  padding:14px 16px;background:rgba(255,255,255,.012);
+}
+.lt-group-head{
+  font-size:14px;font-weight:700;color:var(--c);margin-bottom:10px;
+  display:flex;align-items:center;gap:8px;letter-spacing:.02em;
+}
+.lt-group-head::before{
+  content:"";width:5px;height:5px;border-radius:50%;background:var(--c);opacity:.85;flex:0 0 auto;
+}
+.lt-group-body{display:flex;flex-direction:column;gap:9px}
 
 /* 指标 */
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:28px}
@@ -136,17 +176,17 @@ main{position:relative;z-index:1}
 .stat:hover{border-color:var(--line-strong);transform:translateY(-2px)}
 .stat .v{font-family:var(--mono);font-size:clamp(22px,2.6vw,30px);font-weight:700;color:var(--txt);line-height:1.1}
 .stat .v small{font-size:.5em;color:var(--cyan);margin-left:3px;font-weight:500}
-.stat .l{font-size:12px;color:var(--dim);margin-top:6px}
+.stat .l{font-size:12.5px;color:var(--dim);margin-top:6px}
 
 /* ---------- 通用区块 ---------- */
 .sec{padding:clamp(48px,7vw,88px) clamp(20px,5vw,64px);max-width:1320px;margin:0 auto;scroll-margin-top:80px}
 .sec-head{margin-bottom:38px;max-width:900px}
 .sec-no{
-  font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--faint);
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.2em;color:var(--faint);
   display:block;margin-bottom:10px;
 }
 .sec-head h2{font-size:clamp(23px,3.2vw,34px);font-weight:750;letter-spacing:-.01em;margin-bottom:12px}
-.sec-head p{color:var(--dim);font-size:14.5px;line-height:1.9}
+.sec-head p{color:var(--dim);font-size:15.5px;line-height:1.9}
 .sec-head p b{color:var(--txt);font-weight:600}
 
 /* 双向逻辑条 */
@@ -165,7 +205,7 @@ main{position:relative;z-index:1}
 
 /* ---------- 层级解构 ---------- */
 .arch{display:block}
-.panel-idx{font-family:var(--mono);font-size:11px;color:var(--faint);letter-spacing:.14em;margin-right:2px}
+.panel-idx{font-family:var(--mono);font-size:11.5px;color:var(--faint);letter-spacing:.14em;margin-right:2px}
 
 .layer-panel{
   border:1px solid var(--line);border-radius:14px;background:var(--surface);
@@ -178,13 +218,13 @@ main{position:relative;z-index:1}
 }
 .panel-top{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:6px}
 .panel-top h3{font-size:clamp(20px,2.6vw,27px);font-weight:750;color:var(--c)}
-.panel-top .pen{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--faint)}
+.panel-top .pen{font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--faint)}
 .panel-q{
   display:inline-block;margin-bottom:16px;
-  font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;color:var(--dim);
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;color:var(--dim);
   border:1px dashed var(--line-strong);border-radius:5px;padding:3px 10px;
 }
-.panel-lead{color:#b9c9d8;font-size:14.5px;line-height:1.95;margin-bottom:24px;max-width:900px}
+.panel-lead{color:#b9c9d8;font-size:15.5px;line-height:1.95;margin-bottom:24px;max-width:900px}
 .panel-note{
   margin-top:24px;padding:14px 18px;border-left:2px solid var(--c);
   background:rgba(255,255,255,.022);border-radius:0 8px 8px 0;
@@ -202,16 +242,16 @@ main{position:relative;z-index:1}
   background:color-mix(in srgb,var(--c) 5%,transparent);
   transform:translateY(-2px);
 }
-.card .ct{font-size:13.5px;font-weight:650;color:var(--txt);margin-bottom:5px;display:flex;gap:8px;align-items:baseline}
+.card .ct{font-size:14px;font-weight:650;color:var(--txt);margin-bottom:5px;display:flex;gap:8px;align-items:baseline}
 .card .ct .cn{
-  font-family:var(--mono);font-size:9.5px;color:var(--c);opacity:.85;flex:0 0 auto;
+  font-family:var(--mono);font-size:11px;color:var(--c);opacity:.85;flex:0 0 auto;
 }
-.card .cd{font-size:12.5px;color:var(--dim);line-height:1.72}
+.card .cd{font-size:13.5px;color:var(--dim);line-height:1.72}
 .panel-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:9px;margin:6px 0 24px}
 .pstat{border:1px solid var(--line);border-radius:8px;padding:11px 13px;background:rgba(34,211,238,.04)}
 .pstat .v{font-family:var(--mono);font-size:19px;font-weight:700;color:var(--cyan)}
 .pstat .v small{font-size:.55em;color:var(--dim);margin-left:2px}
-.pstat .l{font-size:11px;color:var(--dim);margin-top:2px}
+.pstat .l{font-size:11.5px;color:var(--dim);margin-top:2px}
 
 /* ---------- 协同链路 ---------- */
 .chain{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin-bottom:16px}
@@ -225,10 +265,10 @@ main{position:relative;z-index:1}
   border-color:rgba(34,211,238,.5);background:rgba(34,211,238,.09);
   box-shadow:0 0 0 1px rgba(34,211,238,.15),0 8px 26px -14px rgba(34,211,238,.6);
 }
-.chain-step .sn{font-family:var(--mono);font-size:10px;color:var(--faint);letter-spacing:.12em}
+.chain-step .sn{font-family:var(--mono);font-size:11px;color:var(--faint);letter-spacing:.12em}
 .chain-step.active .sn{color:var(--cyan)}
 .chain-step .st{font-size:13px;font-weight:650;margin-top:4px;line-height:1.45}
-.chain-step .sa{font-size:10.5px;color:var(--faint);margin-top:6px;font-family:var(--mono)}
+.chain-step .sa{font-size:11.5px;color:var(--faint);margin-top:6px;font-family:var(--mono)}
 
 .chain-detail{
   border:1px solid var(--line);border-radius:14px;background:var(--surface);
@@ -237,18 +277,18 @@ main{position:relative;z-index:1}
 .cd-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:14px}
 .cd-head .num{font-family:var(--mono);font-size:22px;color:var(--cyan);font-weight:700;opacity:.75}
 .cd-head h3{font-size:clamp(18px,2.3vw,23px);font-weight:750}
-.cd-head .flow{font-family:var(--mono);font-size:11.5px;color:var(--dim);margin-left:auto}
-.cd-desc{color:#b9c9d8;font-size:14px;line-height:1.95;margin-bottom:20px;max-width:950px}
+.cd-head .flow{font-family:var(--mono);font-size:12px;color:var(--dim);margin-left:auto}
+.cd-desc{color:#b9c9d8;font-size:15px;line-height:1.95;margin-bottom:20px;max-width:950px}
 .io{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:16px}
 .io-item{border:1px solid var(--line);border-radius:9px;padding:13px 15px;background:rgba(255,255,255,.014)}
-.io-item .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;margin-bottom:6px}
+.io-item .k{font-family:var(--mono);font-size:11px;letter-spacing:.14em;margin-bottom:6px}
 .io-item.in .k{color:var(--mint)}
 .io-item.out .k{color:var(--amber)}
-.io-item .v{font-size:12.8px;color:var(--dim);line-height:1.75}
+.io-item .v{font-size:13.5px;color:var(--dim);line-height:1.75}
 .chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-.chips .lbl{font-family:var(--mono);font-size:10px;color:var(--faint);letter-spacing:.12em;margin-right:4px}
+.chips .lbl{font-family:var(--mono);font-size:11px;color:var(--faint);letter-spacing:.12em;margin-right:4px}
 .chip{
-  font-size:11.5px;padding:3px 10px;border-radius:20px;
+  font-size:12px;padding:3px 10px;border-radius:20px;
   border:1px solid color-mix(in srgb,var(--c) 35%,transparent);
   color:var(--c);background:color-mix(in srgb,var(--c) 8%,transparent);
 }
@@ -259,17 +299,17 @@ main{position:relative;z-index:1}
 .matrix-title b{color:var(--txt)}
 .matrix{display:grid;grid-template-columns:132px repeat(6,minmax(64px,1fr));gap:5px;min-width:620px}
 .m-h{
-  font-size:11px;text-align:center;color:var(--dim);padding:8px 4px;
+  font-size:11.5px;text-align:center;color:var(--dim);padding:8px 4px;
   border-bottom:1px solid var(--line);font-weight:600;letter-spacing:.03em;
 }
 .m-h.c-task{color:var(--c-task)} .m-h.c-sos{color:var(--c-sos)} .m-h.c-whole{color:var(--c-whole)}
 .m-h.c-system{color:var(--c-system)} .m-h.c-sub{color:var(--c-sub)} .m-h.c-module{color:var(--c-module)}
 .m-rl{
-  font-size:11.5px;color:var(--dim);padding:8px 8px 8px 0;display:flex;align-items:center;gap:7px;
+  font-size:12px;color:var(--dim);padding:8px 8px 8px 0;display:flex;align-items:center;gap:7px;
   font-family:var(--mono);
 }
-.m-rl .n{color:var(--faint);font-size:10px}
-.m-rl .t{font-family:var(--sans);color:var(--txt);font-size:11.5px}
+.m-rl .n{color:var(--faint);font-size:11px}
+.m-rl .t{font-family:var(--sans);color:var(--txt);font-size:12px}
 .m-row{display:contents}
 .m-cell{height:30px;border-radius:5px;background:rgba(255,255,255,.02);transition:.22s;border:1px solid transparent}
 .m-rl{cursor:pointer}
@@ -277,40 +317,32 @@ main{position:relative;z-index:1}
 .m-cell.on.strong{background:rgba(34,211,238,.42);box-shadow:0 0 12px rgba(34,211,238,.28)}
 .m-row.active .m-rl .t{color:var(--cyan)}
 .m-row.active .m-cell.on{background:rgba(34,211,238,.4);border-color:rgba(34,211,238,.55)}
-.matrix-legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:14px;font-size:11px;color:var(--faint);font-family:var(--mono)}
+.matrix-legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:14px;font-size:11.5px;color:var(--faint);font-family:var(--mono)}
 .matrix-legend span{display:flex;align-items:center;gap:6px}
 .matrix-legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
 
-/* ---------- 对象 ---------- */
-.obj-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:14px;margin-bottom:34px}
-.obj-card{border:1px solid var(--line);border-radius:13px;background:var(--surface);padding:20px;position:relative;overflow:hidden}
-.obj-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--c);opacity:.85}
-.obj-card .oh{display:flex;align-items:center;gap:10px;margin-bottom:12px}
-.obj-card .oh .tag{
-  font-family:var(--mono);font-size:9px;letter-spacing:.1em;padding:2px 7px;border-radius:4px;
-  border:1px solid color-mix(in srgb,var(--c) 40%,transparent);color:var(--c);
-  background:color-mix(in srgb,var(--c) 9%,transparent);
-}
-.obj-card .oh h3{font-size:15.5px;font-weight:700}
-.obj-list{list-style:none;display:flex;flex-direction:column;gap:9px}
-.obj-list li{padding-bottom:9px;border-bottom:1px dashed rgba(140,180,210,.09);display:flex;flex-direction:column;gap:2px}
-.obj-list li:last-child{border-bottom:none;padding-bottom:0}
-.obj-list .oi{font-size:12.8px;color:var(--txt);font-weight:600}
-.obj-list .od{font-size:11.8px;color:var(--dim);line-height:1.65}
+/* ---------- 控制结构图 ---------- */
+.ctrl-wrap{border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:clamp(12px,2vw,22px);margin-bottom:34px;overflow-x:auto}
+.control-diagram{width:100%;min-width:780px;height:auto;display:block}
+/* ---------- 闭环链路图 ---------- */
+.loop-wrap{border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:clamp(12px,2vw,22px);margin-bottom:22px;overflow-x:auto}
+.loop-diagram{width:100%;min-width:660px;height:auto;display:block}
+.diagram-caption{margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-size:12.5px;color:var(--dim);line-height:1.75}
+.diagram-caption b{color:var(--txt);font-weight:600}
 
 .rel-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
 .rel-card{border:1px solid var(--line);border-radius:11px;background:var(--surface);padding:17px 19px;transition:.22s}
 .rel-card:hover{border-color:var(--line-strong);transform:translateY(-2px)}
 .rel-card .rn{display:flex;align-items:center;gap:9px;margin-bottom:8px}
-.rel-card .rn .ri{font-family:var(--mono);font-size:10px;color:var(--amber);letter-spacing:.1em}
-.rel-card h4{font-size:14px;font-weight:700}
-.rel-card p{font-size:12.5px;color:var(--dim);line-height:1.75}
+.rel-card .rn .ri{font-family:var(--mono);font-size:11px;color:var(--amber);letter-spacing:.1em}
+.rel-card h4{font-size:15px;font-weight:700}
+.rel-card p{font-size:13.5px;color:var(--dim);line-height:1.75}
 
 /* ---------- 页脚 ---------- */
 footer{
   border-top:1px solid var(--line);padding:34px clamp(20px,5vw,64px);
   max-width:1320px;margin:0 auto;display:flex;justify-content:space-between;
-  gap:16px;flex-wrap:wrap;color:var(--faint);font-size:12px;font-family:var(--mono);
+  gap:16px;flex-wrap:wrap;color:var(--faint);font-size:12.5px;font-family:var(--mono);
   letter-spacing:.04em;
 }
 
@@ -323,13 +355,20 @@ footer{
   .chain{grid-template-columns:repeat(3,minmax(0,1fr))}
   .chainbar{grid-template-columns:repeat(3,minmax(0,1fr))}
   .bidir{grid-template-columns:1fr}
+  .layer-tree{flex-direction:column;align-items:stretch;gap:18px}
+  .lt-root{text-align:left;min-width:0}
+  .lt-root::after{display:none}
+  .lt-branches{padding-left:0}
+  .lt-branches::before{display:none}
+  .lt-branches > .lt-node::before,
+  .lt-branches > .lt-group::before{display:none}
 }
 @media(max-width:640px){
   .chain{grid-template-columns:repeat(2,minmax(0,1fr))}
   .chainbar{grid-template-columns:repeat(2,minmax(0,1fr))}
   .io{grid-template-columns:1fr}
   .matrix{grid-template-columns:96px repeat(6,minmax(42px,1fr))}
-  .m-rl .t{font-size:10.5px}
+  .m-rl .t{font-size:11.5px}
 }
 </style>
 <script>document.documentElement.classList.add('js');</script>
@@ -347,7 +386,6 @@ footer{
     <a href="#arch">层级解构</a>
     <a href="#synergy">协同链路</a>
     <a href="#objects">体系对象</a>
-    <a href="#spec">整机指标</a>
   </nav>
 </header>
 
@@ -390,6 +428,82 @@ footer{
       <h2>任务 · 体系 · 系统 的协同</h2>
     </div>
 
+    <div class="loop-wrap reveal">
+      <svg class="loop-diagram" viewBox="0 0 900 500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="任务闭环链路图">
+        <defs>
+          <style>
+            .lp-title{font:600 17px "Microsoft YaHei","PingFang SC",sans-serif;fill:#dbe6f0}
+            .lp-sub{font:400 12px "Microsoft YaHei","PingFang SC",sans-serif;fill:#7b8ea3}
+            .lp-tag{font:700 11px ui-monospace,Consolas,monospace;letter-spacing:.14em}
+            .lp-label{font:500 11.5px "Microsoft YaHei","PingFang SC",sans-serif;fill:#93a6ba}
+            .lp-core{font:700 26px "Microsoft YaHei","PingFang SC",sans-serif;fill:#22d3ee}
+            .lp-core2{font:400 12px "Microsoft YaHei","PingFang SC",sans-serif;fill:#7b8ea3}
+          </style>
+          <marker id="b-ctrl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="#22d3ee"/>
+          </marker>
+          <marker id="b-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="#fbbf24"/>
+          </marker>
+          <filter id="b-glow" x="-40%" y="-40%" width="180%" height="180%">
+            <feGaussianBlur stdDeviation="7" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+
+        <!-- 环形链路 -->
+        <g fill="none" stroke-linecap="round">
+          <path d="M570,80 C660,80 740,125 740,200" stroke="#22d3ee" stroke-width="1.7" marker-end="url(#b-ctrl)"/>
+          <path d="M740,296 C740,355 660,435 570,435" stroke="#22d3ee" stroke-width="1.7" marker-end="url(#b-ctrl)"/>
+          <path d="M330,435 C240,435 160,355 160,296" stroke="#22d3ee" stroke-width="1.7" marker-end="url(#b-ctrl)"/>
+          <path d="M160,200 C160,125 240,80 330,80" stroke="#fbbf24" stroke-width="1.7" marker-end="url(#b-amber)"/>
+        </g>
+
+        <!-- 环节标签 -->
+        <g>
+          <text x="698" y="126" class="lp-label">任务下达 · ROE · 识别码</text>
+          <text x="698" y="386" class="lp-label">召唤侦察 · 数据融合</text>
+          <text x="202" y="386" text-anchor="end" class="lp-label">目标移交 · 坐标修正</text>
+          <text x="202" y="126" text-anchor="end" class="lp-label" fill="#fbbf24">战果上报 · 毁伤评估</text>
+        </g>
+
+        <!-- 闭环中心 -->
+        <g>
+          <text x="450" y="238" text-anchor="middle" class="lp-core">杀伤链闭环</text>
+          <text x="450" y="266" text-anchor="middle" class="lp-core2">任一环节中断 → 全链失效</text>
+        </g>
+
+        <!-- 节点 -->
+        <g>
+          <rect x="330" y="30" width="240" height="80" rx="10" fill="rgba(34,211,238,.06)" stroke="rgba(34,211,238,.45)" stroke-width="1.4"/>
+          <text x="450" y="64" text-anchor="middle" class="lp-title">上级指控节点</text>
+          <text x="450" y="88" text-anchor="middle" class="lp-sub">指挥所 · 控制站 · 任务规划</text>
+          <text x="558" y="48" text-anchor="end" class="lp-tag" fill="#22d3ee">CONTROLLER</text>
+        </g>
+
+        <g filter="url(#b-glow)">
+          <rect x="620" y="200" width="240" height="96" rx="12" fill="rgba(34,211,238,.10)" stroke="#22d3ee" stroke-width="1.8"/>
+        </g>
+        <text x="740" y="240" text-anchor="middle" class="lp-title">轮腿式平台</text>
+        <text x="740" y="266" text-anchor="middle" class="lp-sub">前沿机动 · 感知 · 打击</text>
+        <text x="848" y="218" text-anchor="end" class="lp-tag" fill="#22d3ee">PLATFORM</text>
+
+        <g>
+          <rect x="330" y="395" width="240" height="80" rx="10" fill="rgba(34,211,238,.05)" stroke="rgba(34,211,238,.4)" stroke-width="1.4"/>
+          <text x="450" y="429" text-anchor="middle" class="lp-title">友邻无人机</text>
+          <text x="450" y="453" text-anchor="middle" class="lp-sub">俯视侦察 · 目标指示</text>
+          <text x="558" y="413" text-anchor="end" class="lp-tag" fill="#22d3ee">SENSOR</text>
+        </g>
+
+        <g>
+          <rect x="40" y="200" width="240" height="96" rx="10" fill="rgba(251,191,36,.06)" stroke="rgba(251,191,36,.45)" stroke-width="1.4"/>
+          <text x="160" y="240" text-anchor="middle" class="lp-title" fill="#fcd34d">火力单元</text>
+          <text x="160" y="266" text-anchor="middle" class="lp-sub">迫击炮 · 巡飞弹 · 支援</text>
+          <text x="268" y="218" text-anchor="end" class="lp-tag" fill="#fbbf24">EFFECTOR</text>
+        </g>
+      </svg>
+    </div>
+
     <div class="chain reveal" id="chain"></div>
     <div class="chain-detail reveal" id="chainDetail"></div>
 
@@ -411,33 +525,173 @@ footer{
       <h2>体系内对象与关系</h2>
     </div>
 
-    <div class="obj-grid" id="objGrid"></div>
+    <div class="ctrl-wrap reveal">
+      <svg class="control-diagram" viewBox="0 0 1160 700" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="STPA 控制结构框图：轮腿式无人作战平台在体系中的控制与反馈回路">
+        <defs>
+          <style>
+            .n-title{font:600 17px "Microsoft YaHei","PingFang SC",sans-serif;fill:#dbe6f0}
+            .n-lead{font:600 20px "Microsoft YaHei","PingFang SC",sans-serif;fill:#eaf4ff}
+            .n-sub{font:400 12px "Microsoft YaHei","PingFang SC",sans-serif;fill:#7b8ea3}
+            .n-tag{font:700 11px ui-monospace,Consolas,monospace;letter-spacing:.14em}
+            .e-label{font:500 11.5px "Microsoft YaHei","PingFang SC",sans-serif;fill:#93a6ba}
+            .lg{font:400 12px "Microsoft YaHei","PingFang SC",sans-serif;fill:#7b8ea3}
+          </style>
+          <marker id="a-ctrl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="#22d3ee"/>
+          </marker>
+          <marker id="a-fb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="#7b8ea3"/>
+          </marker>
+          <marker id="a-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="#f87171"/>
+          </marker>
+          <marker id="a-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="#fbbf24"/>
+          </marker>
+          <marker id="a-mint" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="#4ade80"/>
+          </marker>
+          <filter id="softglow" x="-40%" y="-40%" width="180%" height="180%">
+            <feGaussianBlur stdDeviation="7" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+
+        <!-- ===== 连线（先画，压在节点下方） ===== -->
+        <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <!-- R1 指控：控制动作 下行 -->
+          <path d="M550,106 V215" stroke="#22d3ee" stroke-width="1.5" marker-end="url(#a-ctrl)"/>
+          <!-- R1 指控：反馈 上行 -->
+          <path d="M610,215 V106" stroke="#7b8ea3" stroke-width="1.3" stroke-dasharray="5 4" marker-end="url(#a-fb)"/>
+          <!-- R2 协同（横向双向） -->
+          <path d="M440,319 V405 H180 V470" stroke="#22d3ee" stroke-width="1.3" opacity=".85" marker-start="url(#a-ctrl)" marker-end="url(#a-ctrl)"/>
+          <!-- R3 伴随 -->
+          <path d="M500,319 V470" stroke="#22d3ee" stroke-width="1.3" opacity=".85" marker-start="url(#a-ctrl)" marker-end="url(#a-ctrl)"/>
+          <!-- R6 保障 -->
+          <path d="M700,319 V405 H780 V470" stroke="#22d3ee" stroke-width="1.3" opacity=".85" marker-start="url(#a-ctrl)" marker-end="url(#a-ctrl)"/>
+          <!-- R4 交战（对抗双向） -->
+          <path d="M780,258 L935,207" stroke="#f87171" stroke-width="1.4" marker-start="url(#a-red)" marker-end="url(#a-red)"/>
+          <!-- R5 约束 -->
+          <path d="M780,303 L935,428" stroke="#fbbf24" stroke-width="1.4" marker-start="url(#a-amber)" marker-end="url(#a-amber)"/>
+          <!-- 环境约束输入 -->
+          <path d="M280,222 L380,256" stroke="#4ade80" stroke-width="1.4" marker-end="url(#a-mint)"/>
+        </g>
+
+        <!-- ===== 连线标签 ===== -->
+        <g>
+          <text x="542" y="152" text-anchor="end" class="e-label">任务指令 · ROE · 路径点</text>
+          <text x="618" y="170" text-anchor="start" class="e-label">状态 · 侦察数据 · 交战报告</text>
+          <text x="300" y="396" text-anchor="middle" class="e-label">R2 协同</text>
+          <text x="512" y="420" text-anchor="start" class="e-label">R3 伴随</text>
+          <text x="792" y="396" text-anchor="start" class="e-label">R6 保障</text>
+          <text x="860" y="222" text-anchor="middle" class="e-label" fill="#f87171">R4 交战</text>
+          <text x="860" y="382" text-anchor="middle" class="e-label" fill="#fbbf24">R5 约束</text>
+          <text x="332" y="208" text-anchor="middle" class="e-label" fill="#4ade80">通行性 · 气象 · 电磁</text>
+        </g>
+
+        <!-- ===== 节点 ===== -->
+        <!-- A 上级指控 -->
+        <g>
+          <rect x="400" y="30" width="360" height="76" rx="10" fill="rgba(34,211,238,.055)" stroke="rgba(34,211,238,.45)" stroke-width="1.3"/>
+          <text x="580" y="61" text-anchor="middle" class="n-title">上级指控节点</text>
+          <text x="580" y="83" text-anchor="middle" class="n-sub">营/连级指挥所 · 无人系统控制站 · 任务规划节点</text>
+          <text x="748" y="48" text-anchor="end" class="n-tag" fill="#22d3ee">BLUE · CONTROLLER</text>
+          <title>上级指控节点：营/连级指挥所、无人系统控制站、体系任务规划节点。关系：指令下达、任务分配、态势汇总。</title>
+        </g>
+
+        <!-- B 轮腿平台（整机） -->
+        <g filter="url(#softglow)">
+          <rect x="380" y="215" width="400" height="104" rx="12" fill="rgba(34,211,238,.10)" stroke="#22d3ee" stroke-width="1.8"/>
+        </g>
+        <text x="580" y="253" text-anchor="middle" class="n-lead">轮腿式无人作战平台</text>
+        <text x="580" y="277" text-anchor="middle" class="n-sub">整机 · 轮腿复合 · 三级自主 · 可消耗边缘节点</text>
+        <text x="748" y="236" text-anchor="end" class="n-tag" fill="#22d3ee">WHOLE PLATFORM</text>
+        <title>轮腿式无人作战平台（整机）：同时是上级指控的被控过程、友邻/有人/保障单元的协同对象，也是对抗与约束关系的主动方。</title>
+
+        <!-- C 友邻无人平台 -->
+        <g>
+          <rect x="40" y="470" width="280" height="76" rx="9" fill="rgba(34,211,238,.045)" stroke="rgba(34,211,238,.35)" stroke-width="1.2"/>
+          <text x="180" y="501" text-anchor="middle" class="n-title">友邻无人平台</text>
+          <text x="180" y="523" text-anchor="middle" class="n-sub">侦察机 · 察打机 · 无人车 · 机器狼</text>
+          <text x="304" y="488" text-anchor="end" class="n-tag" fill="#22d3ee">BLUE</text>
+          <title>友邻无人平台：侦察无人机、察打无人机、其他地面无人车、机器狼/机器狗分队。协同感知、目标交接、编队配合。</title>
+        </g>
+
+        <!-- D 有人作战单元 -->
+        <g>
+          <rect x="340" y="470" width="280" height="76" rx="9" fill="rgba(34,211,238,.045)" stroke="rgba(34,211,238,.35)" stroke-width="1.2"/>
+          <text x="480" y="501" text-anchor="middle" class="n-title">有人作战单元</text>
+          <text x="480" y="523" text-anchor="middle" class="n-sub">步兵分队 · 有人战车 · 火力支援单元</text>
+          <text x="604" y="488" text-anchor="end" class="n-tag" fill="#22d3ee">BLUE</text>
+          <title>有人作战单元：伴随步兵分队、有人战车、火力支援单元（迫击炮/反坦克）。伴随跟随、火力召唤、直接支援。</title>
+        </g>
+
+        <!-- E 保障节点 -->
+        <g>
+          <rect x="640" y="470" width="280" height="76" rx="9" fill="rgba(34,211,238,.045)" stroke="rgba(34,211,238,.35)" stroke-width="1.2"/>
+          <text x="780" y="501" text-anchor="middle" class="n-title">保障节点</text>
+          <text x="780" y="523" text-anchor="middle" class="n-sub">前进补给点 · 维修回收组 · 医疗后送单元</text>
+          <text x="904" y="488" text-anchor="end" class="n-tag" fill="#22d3ee">BLUE</text>
+          <title>保障节点：前进补给点、维修回收组、医疗后送单元。物资前送、故障回收、战损后送。</title>
+        </g>
+
+        <!-- F 敌方对象 -->
+        <g>
+          <rect x="940" y="150" width="200" height="110" rx="10" fill="rgba(248,113,113,.06)" stroke="rgba(248,113,113,.45)" stroke-width="1.3"/>
+          <text x="1040" y="181" text-anchor="middle" class="n-title" fill="#fca5a5">敌方对象</text>
+          <text x="1040" y="203" text-anchor="middle" class="n-sub">作战人员 · 装甲平台</text>
+          <text x="1040" y="220" text-anchor="middle" class="n-sub">无人平台 · 固定设施</text>
+          <text x="1040" y="237" text-anchor="middle" class="n-sub">电子与网络节点</text>
+          <text x="1128" y="168" text-anchor="end" class="n-tag" fill="#f87171">RED</text>
+          <title>敌方对象：作战人员（步兵/反装甲手/无人机操作员）、有人平台（坦克/装甲车/直升机/攻击机）、无人平台（侦察无人机/FPV/无人车）、固定设施（工事/指挥所/雷达站）、电子与网络节点（干扰源/GPS干扰器）。</title>
+        </g>
+
+        <!-- G 中立方 -->
+        <g>
+          <rect x="940" y="390" width="200" height="110" rx="10" fill="rgba(251,191,36,.055)" stroke="rgba(251,191,36,.42)" stroke-width="1.3"/>
+          <text x="1040" y="433" text-anchor="middle" class="n-title" fill="#fcd34d">中立方与受限对象</text>
+          <text x="1040" y="456" text-anchor="middle" class="n-sub">平民 · 民用车辆</text>
+          <text x="1040" y="473" text-anchor="middle" class="n-sub">住宅 / 学校 / 医院</text>
+          <text x="1040" y="490" text-anchor="middle" class="n-sub">民用基础设施 · 人道设施</text>
+          <text x="1128" y="410" text-anchor="end" class="n-tag" fill="#fbbf24">NEUTRAL</text>
+          <title>中立方与受限对象：平民个体（平民/难民/被胁迫人员）、民用物体（车辆/住宅/学校/医院）、民用基础设施（电力/供水/通信）、人道组织与设施。识别区分、避免误伤、附带损伤评估。</title>
+        </g>
+
+        <!-- H 环境与信息域 -->
+        <g>
+          <rect x="40" y="150" width="240" height="130" rx="10" fill="rgba(74,222,128,.05)" stroke="rgba(74,222,128,.40)" stroke-width="1.3"/>
+          <text x="160" y="181" text-anchor="middle" class="n-title" fill="#86efac">环境与信息域</text>
+          <text x="160" y="203" text-anchor="middle" class="n-sub">地形与障碍 · 气象条件</text>
+          <text x="160" y="220" text-anchor="middle" class="n-sub">电磁环境 · 赛博空间</text>
+          <text x="160" y="245" text-anchor="middle" class="n-sub">通行性 · 链路可用性</text>
+          <text x="264" y="168" text-anchor="end" class="n-tag" fill="#4ade80">ENV</text>
+          <title>环境与信息域：地形与障碍（道路/楼梯/废墟/水域）、气象条件（雨雾烟尘/风速）、电磁环境（频谱/GPS质量/干扰强度）、赛博空间节点。影响通行性判断、链路可用性与模式切换。</title>
+        </g>
+
+        <!-- ===== 图例 ===== -->
+        <g transform="translate(40,620)">
+          <line x1="0" y1="0" x2="46" y2="0" stroke="#22d3ee" stroke-width="1.5" marker-end="url(#a-ctrl)"/>
+          <text x="58" y="4" class="lg">控制动作（指令下行）</text>
+          <line x1="0" y1="30" x2="46" y2="30" stroke="#7b8ea3" stroke-width="1.3" stroke-dasharray="5 4" marker-end="url(#a-fb)"/>
+          <text x="58" y="34" class="lg">反馈（状态上行）</text>
+          <line x1="0" y1="60" x2="46" y2="60" stroke="#22d3ee" stroke-width="1.3" marker-start="url(#a-ctrl)" marker-end="url(#a-ctrl)"/>
+          <text x="58" y="64" class="lg">双向交互（协同 / 伴随 / 保障）</text>
+
+          <line x1="440" y1="0" x2="486" y2="0" stroke="#f87171" stroke-width="1.4" marker-start="url(#a-red)" marker-end="url(#a-red)"/>
+          <text x="498" y="4" class="lg">对抗（交战）</text>
+          <line x1="440" y1="30" x2="486" y2="30" stroke="#fbbf24" stroke-width="1.4" marker-start="url(#a-amber)" marker-end="url(#a-amber)"/>
+          <text x="498" y="34" class="lg">约束（识别 / 告警）</text>
+          <line x1="440" y1="60" x2="486" y2="60" stroke="#4ade80" stroke-width="1.4" marker-end="url(#a-mint)"/>
+          <text x="498" y="64" class="lg">环境输入</text>
+        </g>
+      </svg>
+    </div>
 
     <div class="sec-head reveal" style="margin-top:10px">
       <span class="sec-no">RELATIONS</span>
       <h2 style="font-size:clamp(19px,2.4vw,24px)">六种核心关系</h2>
     </div>
     <div class="rel-grid" id="relGrid"></div>
-  </section>
-
-  <!-- ============ 04 指标 ============ -->
-  <section class="sec" id="spec">
-    <div class="sec-head reveal">
-      <span class="sec-no">04 / PLATFORM SPEC</span>
-      <h2>整机级指标约束</h2>
-    </div>
-    <div class="stats reveal" id="specStats"></div>
-
-    <div class="bidir reveal" style="margin-top:26px">
-      <div class="bidir-row down">
-        <span class="arrow">↓</span>
-        <span>任务要求 → 体系分工 → 整机指标 → 系统指标 → 子系统指标 → 模块参数</span>
-      </div>
-      <div class="bidir-row up">
-        <span class="arrow">↑</span>
-        <span>指标一旦被分解到模块层，就变成<b>可采购、可测试、可迭代</b>的工程条目</span>
-      </div>
-    </div>
   </section>
 
   <footer>
@@ -582,36 +836,6 @@ const CHAIN = [
   }
 ];
 
-/* 体系对象 */
-const OBJECTS = [
-  { tag:'BLUE', title:'己方对象', color:'var(--cyan)', items:[
-    {i:'上级指控节点', d:'营/连级指挥所、无人系统控制站、体系任务规划节点 —— 指令下达、任务分配、态势汇总'},
-    {i:'友邻无人平台', d:'侦察无人机、察打无人机、其他地面无人车、机器狼/机器狗分队 —— 协同感知、目标交接、编队配合'},
-    {i:'有人作战单元', d:'伴随步兵分队、有人战车、火力支援单元 —— 伴随跟随、火力召唤、直接支援'},
-    {i:'保障节点', d:'前进补给点、维修回收组、医疗后送单元 —— 物资前送、故障回收、战损后送'},
-    {i:'平台自身载荷', d:'武器站模块、侦察传感器模块、物资箱模块 —— 机械/电气/数据接口，功能扩展'}
-  ]},
-  { tag:'RED', title:'敌方对象', color:'var(--red,#f87171)', items:[
-    {i:'敌方作战人员', d:'步兵、反装甲手、无人机操作员 —— 目标探测、压制、规避'},
-    {i:'敌方有人平台', d:'坦克/装甲车、直升机、固定翼对地攻击机 —— 威胁规避、召唤火力打击'},
-    {i:'敌方无人平台', d:'侦察无人机、自杀式 FPV、无人地面车 —— 反无人作战、电子干扰、规避'},
-    {i:'敌方固定设施', d:'工事、指挥所、通信节点、雷达站 —— 目标指示、火力引导'},
-    {i:'敌方电子与网络节点', d:'通信干扰源、GPS 干扰器、数据链节点 —— 电磁规避、抗干扰、反辐射引导'}
-  ]},
-  { tag:'NEUTRAL', title:'中立方与受限对象', color:'var(--amber)', items:[
-    {i:'平民个体', d:'平民、难民、被胁迫人员 —— 识别区分、避免误伤、行为约束'},
-    {i:'民用物体', d:'民用车辆、住宅、学校、医院 —— 避免攻击、附带损伤评估'},
-    {i:'民用基础设施', d:'电力、供水、通信设施 —— 避免作为军事目标，除非被军事利用'},
-    {i:'人道组织与设施', d:'医疗队、救援车队 —— 识别避让，不干扰'}
-  ]},
-  { tag:'ENV', title:'环境与信息域对象', color:'var(--mint)', items:[
-    {i:'地形与障碍', d:'道路、楼梯、废墟、水域、植被 —— 通行性判断、路径规划、轮腿模式切换'},
-    {i:'气象条件', d:'雨、雾、烟尘、风速 —— 传感器性能降级、机动能力限制'},
-    {i:'电磁环境', d:'通信频谱、GPS 信号质量、敌方干扰强度 —— 链路可用性判断、自主模式切换'},
-    {i:'赛博空间节点', d:'己方数据链网络、敌方网络攻击源 —— 接入安全、抗欺骗、数据完整性校验'}
-  ]}
-];
-
 /* 六种关系 */
 const RELATIONS = [
   {n:'R1', t:'指控关系（上下）', d:'输入任务指令、路径点、ROE、识别码；输出自身状态、侦察数据、交战报告。'},
@@ -622,25 +846,12 @@ const RELATIONS = [
   {n:'R6', t:'能量与物质流（保障）', d:'接收电池/弹药补给与维修备件；输出故障代码、战损报告与回收请求。'}
 ];
 
-/* 指标 */
-const SPEC = [
-  {v:'≥ 10', u:'km/h', l:'轮式最大速度'},
-  {v:'≥ 0.25', u:'m', l:'足式越障高度'},
-  {v:'≤ 35', u:'°', l:'可攀爬斜坡 / 标准楼梯'},
-  {v:'≥ 0.4', u:'m', l:'跨越壕沟宽度'},
-  {v:'≥ 15', u:'kg', l:'有效搭载重量'},
-  {v:'三级', u:'', l:'遥控 / 半自主 / 全自主'}
-];
-
 /* ================= 渲染 ================= */
 const $ = (s, r=document) => r.querySelector(s);
 
-function statHTML(s){
-  return `<div class="stat"><div class="v">${s.v}<small>${s.u}</small></div><div class="l">${s.l}</div></div>`;
-}
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-/* 顶部链路条：点击直接切换下方层级面板 */
+/* 层级切换卡 */
 $('#chainbar').innerHTML = LAYERS.map((l,i)=>`
   <button class="cb-node ${l.key==='whole'?'pivot':''}" data-i="${i}" style="--c:${l.color}" aria-label="查看${l.name}">
     <span class="cb-cn">${l.name}</span>
@@ -653,14 +864,56 @@ $('#chainbar').addEventListener('click', e=>{
   renderLayer(Number(btn.dataset.i));
 });
 
-/* 指标区数字 */
-$('#specStats').innerHTML = SPEC.map(statHTML).join('');
-
 /* ---- 层级面板 ---- */
+const SYS_NAME = {
+  1:'轮腿复合移动系统', 2:'智能感知与导航系统', 3:'作战载荷与武器管理系统',
+  4:'指挥控制与通信系统', 5:'能源与热管理系统', 6:'结构与防护系统'
+};
+const MODULE_GROUP = {
+  '轮驱/转向':1,'腿部作动':1,'悬架减震':1,
+  '环境感知':2,'定位建图':2,'目标识别':2,
+  '武器伺服':3,'射击控制':3,
+  '任务计算':4,'战术通信':4,'协同接口':4,
+  '能源':5,'热管理':5,
+  '结构防护':6
+};
+function buildGroups(l){
+  if(l.key==='subsystem'){
+    const b={};
+    l.items.forEach(it=>{ const g=parseInt(String(it.n).split('.')[0],10); (b[g]=b[g]||[]).push(it); });
+    return Object.keys(b).sort((x,y)=>x-y).map(g=>({title:SYS_NAME[g]||('系统 '+g),items:b[g]}));
+  }
+  if(l.key==='module'){
+    const b={};
+    l.items.forEach(it=>{ const g=MODULE_GROUP[it.t]||0; (b[g]=b[g]||[]).push(it); });
+    return Object.keys(b).sort((x,y)=>x-y).map(g=>({title:SYS_NAME[g]||'其他',items:b[g]}));
+  }
+  return [{title:'',items:l.items}];
+}
+const nodeHTML = it => `
+  <div class="lt-node">
+    <span class="lt-t">${it.n?`<i>${it.n}</i>`:''}${it.t}</span>
+    <span class="lt-d">${it.d}</span>
+  </div>`;
+function fitTreeLines(){
+  const br = document.querySelector('#layerPanel .lt-branches');
+  if(!br) return;
+  const kids = br.children;
+  if(kids.length < 2){ br.style.removeProperty('--lt-top'); br.style.removeProperty('--lt-bottom'); return; }
+  const brRect = br.getBoundingClientRect();
+  const f = kids[0].getBoundingClientRect();
+  const e = kids[kids.length-1].getBoundingClientRect();
+  br.style.setProperty('--lt-top', (f.top + f.height/2 - brRect.top) + 'px');
+  br.style.setProperty('--lt-bottom', (brRect.height - (e.top + e.height/2 - brRect.top)) + 'px');
+}
 function renderLayer(i){
   const l = LAYERS[i];
   const panel = $('#layerPanel');
   panel.style.setProperty('--c', l.color);
+  const treeHTML = buildGroups(l).map(g => g.title
+    ? `<div class="lt-group"><div class="lt-group-head">${g.title}</div><div class="lt-group-body">${g.items.map(nodeHTML).join('')}</div></div>`
+    : g.items.map(nodeHTML).join('')
+  ).join('');
   panel.innerHTML = `
     <div class="panel-top">
       <span class="panel-idx">0${i+1}</span>
@@ -670,17 +923,19 @@ function renderLayer(i){
     <p class="panel-lead">${l.lead}</p>
     ${l.stats ? `<div class="panel-stats">${l.stats.map(s=>`
       <div class="pstat"><div class="v">${s.v}<small>${s.u}</small></div><div class="l">${s.l}</div></div>`).join('')}</div>` : ''}
-    <div class="cards">
-      ${l.items.map(it=>`
-        <div class="card">
-          <div class="ct">${it.n?`<span class="cn">${it.n}</span>`:''}${it.t}</div>
-          <div class="cd">${it.d}</div>
-        </div>`).join('')}
+    <div class="layer-tree">
+      <div class="lt-root">
+        <span class="lt-root-name">${l.name}</span>
+        <span class="lt-root-en">${l.en}</span>
+      </div>
+      <div class="lt-branches">${treeHTML}</div>
     </div>
     <div class="panel-note">${l.note}</div>
   `;
   [...$('#chainbar').children].forEach((b,idx)=>b.classList.toggle('active', idx===i));
+  requestAnimationFrame(fitTreeLines);
 }
+window.addEventListener('resize', fitTreeLines);
 
 renderLayer(0);
 
@@ -740,15 +995,7 @@ matrix.addEventListener('click', e=>{
 
 renderChain(0);
 
-/* ---- 对象 ---- */
-$('#objGrid').innerHTML = OBJECTS.map(o=>`
-  <div class="obj-card" style="--c:${o.color}">
-    <div class="oh"><span class="tag">${o.tag}</span><h3>${o.title}</h3></div>
-    <ul class="obj-list">
-      ${o.items.map(it=>`<li><span class="oi">${it.i}</span><span class="od">${it.d}</span></li>`).join('')}
-    </ul>
-  </div>`).join('');
-
+/* ---- 关系 ---- */
 $('#relGrid').innerHTML = RELATIONS.map(r=>`
   <div class="rel-card">
     <div class="rn"><span class="ri">${r.n}</span><h4>${r.t}</h4></div>
