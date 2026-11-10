@@ -81,7 +81,7 @@ main{position:relative;z-index:1}
 .topnav a:hover{color:var(--cyan);background:rgba(34,211,238,.07)}
 
 /* ---------- Hero ---------- */
-.hero{padding:clamp(56px,9vw,110px) clamp(20px,5vw,64px) clamp(36px,5vw,60px);max-width:1320px;margin:0 auto}
+.hero{padding:clamp(56px,9vw,110px) clamp(20px,5vw,64px) clamp(24px,3vw,40px);max-width:1320px;margin:0 auto}
 .kicker{
   font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--cyan);
   display:flex;align-items:center;gap:12px;margin-bottom:26px;
@@ -96,25 +96,32 @@ main{position:relative;z-index:1}
   background:linear-gradient(100deg,var(--cyan) 0%,#7dd3fc 45%,var(--mint) 100%);
   -webkit-background-clip:text;background-clip:text;
 }
-.hero-sub{max-width:760px;color:var(--dim);font-size:clamp(14px,1.6vw,17px);line-height:1.9}
-.hero-sub strong{color:var(--txt);font-weight:600}
 
-/* 六层链路 */
+/* 六层切换卡 */
 .chainbar{
-  display:flex;align-items:stretch;gap:0;margin-top:44px;flex-wrap:wrap;
-  border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface);
+  display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin-bottom:20px;
 }
 .cb-node{
-  flex:1 1 120px;padding:16px 14px;position:relative;min-width:104px;
-  border-right:1px solid var(--line);transition:.25s;
+  padding:15px 14px 14px;position:relative;min-width:0;overflow:hidden;
+  border:1px solid var(--line);border-radius:9px;
+  background:var(--surface);font-family:var(--sans);text-align:left;cursor:pointer;
+  transition:.22s;
 }
-.cb-node:last-child{border-right:none}
-.cb-node .cb-cn{font-size:15px;font-weight:700;color:var(--c);letter-spacing:.04em}
-.cb-node .cb-en{font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--faint);margin-top:3px}
-.cb-node:hover{background:rgba(255,255,255,.025)}
-.cb-node.pivot{background:linear-gradient(180deg,rgba(34,211,238,.14),rgba(34,211,238,.03))}
-.cb-node.pivot .cb-cn{font-size:17px}
-.cb-node.pivot::before{
+.cb-node::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--c);opacity:.9;
+}
+.cb-node .cb-cn{display:block;font-size:15px;font-weight:700;color:var(--c);letter-spacing:.04em}
+.cb-node .cb-en{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--faint);margin-top:3px}
+.cb-node:hover{border-color:var(--line-strong);background:var(--surface-2);transform:translateY(-2px)}
+.cb-node.active{
+  border-color:color-mix(in srgb,var(--c) 50%,transparent);
+  background:color-mix(in srgb,var(--c) 10%,transparent);
+  box-shadow:0 0 0 1px color-mix(in srgb,var(--c) 16%,transparent);
+}
+.cb-node.pivot{background:linear-gradient(180deg,rgba(34,211,238,.10),rgba(34,211,238,.02))}
+.cb-node.pivot.active{background:linear-gradient(180deg,rgba(34,211,238,.18),rgba(34,211,238,.04))}
+.cb-node.pivot::before{width:3px;opacity:1}
+.cb-node.pivot::after{
   content:"轴心";position:absolute;top:6px;right:8px;
   font-family:var(--mono);font-size:8px;letter-spacing:.1em;color:var(--cyan);
   border:1px solid rgba(34,211,238,.35);border-radius:3px;padding:0 4px;
@@ -132,7 +139,7 @@ main{position:relative;z-index:1}
 .stat .l{font-size:12px;color:var(--dim);margin-top:6px}
 
 /* ---------- 通用区块 ---------- */
-.sec{padding:clamp(48px,7vw,88px) clamp(20px,5vw,64px);max-width:1320px;margin:0 auto}
+.sec{padding:clamp(48px,7vw,88px) clamp(20px,5vw,64px);max-width:1320px;margin:0 auto;scroll-margin-top:80px}
 .sec-head{margin-bottom:38px;max-width:900px}
 .sec-no{
   font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--faint);
@@ -157,29 +164,8 @@ main{position:relative;z-index:1}
 .bidir-row b{color:var(--txt)}
 
 /* ---------- 层级解构 ---------- */
-.arch{display:grid;grid-template-columns:250px minmax(0,1fr);gap:20px;align-items:start}
-.layer-nav{display:flex;flex-direction:column;gap:8px;position:sticky;top:90px}
-.lnav-btn{
-  display:flex;align-items:center;gap:12px;width:100%;text-align:left;
-  padding:13px 14px;border-radius:10px;cursor:pointer;
-  background:var(--surface);border:1px solid var(--line);
-  color:var(--dim);font-family:var(--sans);font-size:14px;
-  transition:.22s;position:relative;overflow:hidden;
-}
-.lnav-btn .idx{font-family:var(--mono);font-size:10px;color:var(--faint);letter-spacing:.1em}
-.lnav-btn .nm{font-weight:600;color:var(--txt);transition:.22s}
-.lnav-btn .en{font-family:var(--mono);font-size:8.5px;letter-spacing:.13em;color:var(--faint);margin-top:2px}
-.lnav-btn:hover{border-color:var(--line-strong);background:var(--surface-2)}
-.lnav-btn.active{
-  border-color:color-mix(in srgb,var(--c) 45%,transparent);
-  background:linear-gradient(90deg,color-mix(in srgb,var(--c) 13%,transparent),transparent);
-  box-shadow:inset 2px 0 0 var(--c);
-}
-.lnav-btn.active .nm{color:var(--c)}
-.lnav-btn .dot{
-  width:7px;height:7px;border-radius:50%;background:var(--faint);flex:0 0 auto;transition:.22s;
-}
-.lnav-btn.active .dot{background:var(--c);box-shadow:0 0 10px var(--c)}
+.arch{display:block}
+.panel-idx{font-family:var(--mono);font-size:11px;color:var(--faint);letter-spacing:.14em;margin-right:2px}
 
 .layer-panel{
   border:1px solid var(--line);border-radius:14px;background:var(--surface);
@@ -334,17 +320,14 @@ footer{
 
 /* ---------- 响应式 ---------- */
 @media(max-width:980px){
-  .arch{grid-template-columns:1fr}
-  .layer-nav{position:static;flex-direction:row;overflow-x:auto;gap:6px;padding-bottom:4px}
-  .lnav-btn{flex:0 0 auto;min-width:138px}
   .chain{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .chainbar{grid-template-columns:repeat(3,minmax(0,1fr))}
   .bidir{grid-template-columns:1fr}
 }
 @media(max-width:640px){
   .chain{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .chainbar{grid-template-columns:repeat(2,minmax(0,1fr))}
   .io{grid-template-columns:1fr}
-  .chainbar{flex-direction:column}
-  .cb-node{border-right:none;border-bottom:1px solid var(--line)}
   .matrix{grid-template-columns:96px repeat(6,minmax(42px,1fr))}
   .m-rl .t{font-size:10.5px}
 }
@@ -373,13 +356,6 @@ footer{
   <section class="hero">
     <div class="kicker">COMPLEX SYSTEM / WHOLE-PLATFORM DECOMPOSITION</div>
     <h1>轮腿式<br /><em>无人作战平台</em></h1>
-    <p class="hero-sub">
-      以「整机」为轴心 —— 向上承接<b>任务</b>与<b>体系</b>，向下分解<b>系统</b>、<b>子系统</b>与<b>模块</b>。
-      一条从作战需求贯穿到最小功能单元、再由单元能力反哺作战效能的<b>双向链路</b>。
-    </p>
-
-    <div class="chainbar" id="chainbar"></div>
-    <div class="stats" id="heroStats"></div>
   </section>
 
   <!-- ============ 01 层级解构 ============ -->
@@ -387,13 +363,15 @@ footer{
     <div class="sec-head reveal">
       <span class="sec-no">01 / LAYER DECOMPOSITION</span>
       <h2>全层级解构</h2>
-      <p>
-        复杂系统的难点不在零件，而在<b>层与层之间的对应关系</b>。向下看，每一层都在回答上一层提出的“靠什么实现”；
-        向上看，每一层都是下层能力的<b>组合与涌现</b>。
-      </p>
     </div>
 
-    <div class="bidir reveal">
+    <div class="chainbar reveal" id="chainbar"></div>
+
+    <div class="arch reveal">
+      <div class="layer-panel" id="layerPanel" role="tabpanel"></div>
+    </div>
+
+    <div class="bidir reveal" style="margin-top:26px">
       <div class="bidir-row down">
         <span class="arrow">↓</span>
         <span><b>需求分解</b>：任务 → 体系 → 整机 → 系统 → 子系统 → 模块</span>
@@ -403,11 +381,6 @@ footer{
         <span><b>能力涌现</b>：模块 → 子系统 → 系统 → 整机 → 体系 → 任务</span>
       </div>
     </div>
-
-    <div class="arch reveal">
-      <aside class="layer-nav" id="layerNav" role="tablist" aria-label="层级导航"></aside>
-      <div class="layer-panel" id="layerPanel" role="tabpanel"></div>
-    </div>
   </section>
 
   <!-- ============ 02 协同链路 ============ -->
@@ -415,10 +388,6 @@ footer{
     <div class="sec-head reveal">
       <span class="sec-no">02 / MISSION–SOS–SYSTEM SYNERGY</span>
       <h2>任务 · 体系 · 系统 的协同</h2>
-      <p>
-        协同不是三张分开的图，而是<b>同一条任务流在不同层同时在线</b>。
-        选择下方任一环节，可以看到这一刻任务层、体系层、系统层各自在做什么、交换了什么。
-      </p>
     </div>
 
     <div class="chain reveal" id="chain"></div>
@@ -440,10 +409,6 @@ footer{
     <div class="sec-head reveal">
       <span class="sec-no">03 / OBJECTS &amp; RELATIONS</span>
       <h2>体系内对象与关系</h2>
-      <p>
-        平台再强，也只是网络里的一个节点。它面对的是一张<b>四类对象共存的图</b>：己方、敌方、中立与约束、环境与信息域。
-        每一类对象都对应一组输入输出关系。
-      </p>
     </div>
 
     <div class="obj-grid" id="objGrid"></div>
@@ -451,7 +416,6 @@ footer{
     <div class="sec-head reveal" style="margin-top:10px">
       <span class="sec-no">RELATIONS</span>
       <h2 style="font-size:clamp(19px,2.4vw,24px)">六种核心关系</h2>
-      <p>协同的本质，是这六条关系在同一时间轴上互不打架、互相补位。</p>
     </div>
     <div class="rel-grid" id="relGrid"></div>
   </section>
@@ -461,7 +425,6 @@ footer{
     <div class="sec-head reveal">
       <span class="sec-no">04 / PLATFORM SPEC</span>
       <h2>整机级指标约束</h2>
-      <p>指标是层层定义的终点，也是体系对平台的<b>硬约束</b>。它们不是性能表，而是“能否承担该任务”的门槛。</p>
     </div>
     <div class="stats reveal" id="specStats"></div>
 
@@ -677,39 +640,33 @@ function statHTML(s){
 }
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-/* 顶部链路条 */
+/* 顶部链路条：点击直接切换下方层级面板 */
 $('#chainbar').innerHTML = LAYERS.map((l,i)=>`
-  <div class="cb-node ${l.key==='whole'?'pivot':''}" style="--c:${l.color}">
-    <div class="cb-cn">${l.name}</div>
-    <div class="cb-en">${l.en}</div>
-  </div>`).join('');
-
-/* 首屏与指标区数字 */
-$('#heroStats').innerHTML = SPEC.slice(0,4).map(statHTML).join('');
-$('#specStats').innerHTML = SPEC.map(statHTML).join('');
-
-/* ---- 层级导航 ---- */
-const nav = $('#layerNav');
-nav.innerHTML = LAYERS.map((l,i)=>`
-  <button class="lnav-btn" role="tab" data-i="${i}" style="--c:${l.color}">
-    <span class="dot"></span>
-    <span>
-      <span class="nm">${l.name}</span>
-      <span class="en" style="display:block">${l.en}</span>
-    </span>
-    <span class="idx" style="margin-left:auto">0${i+1}</span>
+  <button class="cb-node ${l.key==='whole'?'pivot':''}" data-i="${i}" style="--c:${l.color}" aria-label="查看${l.name}">
+    <span class="cb-cn">${l.name}</span>
+    <span class="cb-en">${l.en}</span>
   </button>`).join('');
 
+$('#chainbar').addEventListener('click', e=>{
+  const btn = e.target.closest('.cb-node');
+  if(!btn) return;
+  renderLayer(Number(btn.dataset.i));
+});
+
+/* 指标区数字 */
+$('#specStats').innerHTML = SPEC.map(statHTML).join('');
+
+/* ---- 层级面板 ---- */
 function renderLayer(i){
   const l = LAYERS[i];
   const panel = $('#layerPanel');
   panel.style.setProperty('--c', l.color);
   panel.innerHTML = `
     <div class="panel-top">
+      <span class="panel-idx">0${i+1}</span>
       <h3>${l.name}</h3>
       <span class="pen">${l.en}</span>
     </div>
-    <div class="panel-q">${l.q}？</div>
     <p class="panel-lead">${l.lead}</p>
     ${l.stats ? `<div class="panel-stats">${l.stats.map(s=>`
       <div class="pstat"><div class="v">${s.v}<small>${s.u}</small></div><div class="l">${s.l}</div></div>`).join('')}</div>` : ''}
@@ -722,14 +679,9 @@ function renderLayer(i){
     </div>
     <div class="panel-note">${l.note}</div>
   `;
-  [...nav.children].forEach((b,idx)=>b.classList.toggle('active', idx===i));
+  [...$('#chainbar').children].forEach((b,idx)=>b.classList.toggle('active', idx===i));
 }
 
-nav.addEventListener('click', e=>{
-  const btn = e.target.closest('.lnav-btn');
-  if(!btn) return;
-  renderLayer(Number(btn.dataset.i));
-});
 renderLayer(0);
 
 /* ---- 任务链路 ---- */
